@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { RalphAvatar, ThoughtBubble, DopeMeter, PMFRadar, ChaosSlider, IdeaCard } from '$lib/components';
+  import { RalphAvatar, ThoughtBubble, DopeMeter, PMFRadar, ChaosSlider, IdeaCard, LoadingSpinner, Toast } from '$lib/components';
   import type { RalphIdea, PMFScores } from '$lib/ralph/types';
   import { RALPH_QUOTES } from '$lib/ralph/types';
 
@@ -15,6 +15,7 @@
   let ralphMood = $state<'neutral' | 'thinking' | 'excited' | 'confused'>('neutral');
   let ralphQuote = $state(getRandomQuote('thinking'));
   let error = $state<string | null>(null);
+  let toast = $state<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   function getRandomQuote(mood: keyof typeof RALPH_QUOTES): string {
     const quotes = RALPH_QUOTES[mood];
@@ -143,10 +144,16 @@
 
       if (response.ok) {
         ralphQuote = "I saved it in my brain box!";
+        toast = { message: 'Idea saved successfully!', type: 'success' };
       }
     } catch (err) {
       error = 'Could not save idea';
+      toast = { message: 'Could not save idea', type: 'error' };
     }
+  }
+
+  function closeToast() {
+    toast = null;
   }
 
   function selectIdea(idea: RalphIdea) {
@@ -166,25 +173,20 @@
   const hasGoldStar = $derived((currentIdea?.dopeLevel ?? 0) >= 4);
 </script>
 
-<main class="min-h-screen bg-playground-sunset">
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <!-- Header -->
-    <header class="flex items-center justify-between mb-8">
-      <div class="flex items-center gap-4">
-        <a href="/" class="text-chalkboard hover:text-sky-blue">
-          <span class="text-2xl">🏠</span>
-        </a>
-        <h1 class="font-chalk text-3xl text-chalkboard">Playground</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <span class="text-sm text-chalkboard/60">Welcome, {data.user?.email?.split('@')[0]}</span>
-        <form action="/auth/logout" method="POST">
-          <button class="text-sm text-chalkboard/60 hover:text-chalkboard">Logout</button>
-        </form>
-      </div>
-    </header>
+<!-- Toast notifications -->
+{#if toast}
+  <Toast message={toast.message} type={toast.type} onclose={closeToast} />
+{/if}
 
-    <div class="grid lg:grid-cols-3 gap-8">
+<main class="min-h-screen bg-playground-sunset">
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h1 class="font-chalk text-3xl text-chalkboard">🎢 Playground</h1>
+      <p class="text-chalkboard/60 text-sm">Generate and refine your startup ideas</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
       <!-- Left Column: Ralph & Input -->
       <div class="lg:col-span-1 space-y-6">
         <!-- Ralph Avatar & Quote -->

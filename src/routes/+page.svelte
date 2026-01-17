@@ -1,14 +1,21 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { RalphAvatar, HeroVideo } from '$lib/components';
 
   let { data } = $props();
 
   let bellRinging = $state(false);
+  let mounted = $state(false);
+
+  // Trigger entrance animations
+  $effect(() => {
+    mounted = true;
+  });
 
   async function spawnRalph() {
     bellRinging = true;
 
-    // Small delay for animation
+    // Bell ring animation
     await new Promise((r) => setTimeout(r, 800));
 
     if (data.session) {
@@ -17,101 +24,188 @@
       goto('/auth/login');
     }
   }
+
+  const stats = [
+    { value: '∞', label: 'Ideas Generated', icon: '💡' },
+    { value: '5⭐', label: 'Max Dope Level', icon: '🌟' },
+    { value: '0', label: 'Bad Ideas*', icon: '🚀' }
+  ];
 </script>
 
-<main class="min-h-screen bg-playground-sunset">
+<main class="bg-playground-sunset overflow-hidden">
   <!-- Hero Section -->
-  <div class="flex flex-col items-center justify-center min-h-screen px-4 text-center">
-    <!-- Ralph Character Placeholder -->
-    <div class="mb-8 animate-float">
-      <div
-        class="w-48 h-48 bg-ralph-yellow rounded-full border-4 border-chalkboard shadow-crayon-lg flex items-center justify-center"
-      >
-        <span class="text-6xl">🧒</span>
+  <section class="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-4 text-center relative">
+    <!-- Background decorations -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-20 left-10 text-6xl opacity-20 animate-float">🎈</div>
+      <div class="absolute top-40 right-20 text-5xl opacity-20 animate-float" style="animation-delay: 0.5s;">🌈</div>
+      <div class="absolute bottom-40 left-20 text-4xl opacity-20 animate-float" style="animation-delay: 1s;">⭐</div>
+      <div class="absolute bottom-20 right-10 text-5xl opacity-20 animate-float" style="animation-delay: 1.5s;">🎨</div>
+    </div>
+
+    <!-- Ralph Character / Hero Video -->
+    <div
+      class="mb-8 transition-all duration-700 {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
+    >
+      <div class="relative">
+        <!-- Animated video when available, falls back to emoji avatar -->
+        <HeroVideo />
+
+        <!-- Speech bubble -->
+        <div
+          class="absolute -right-4 -top-4 bg-white rounded-full px-3 py-1 border-2 border-chalkboard
+                 shadow-crayon animate-bounce z-10"
+          style="animation-duration: 2s;"
+        >
+          <span class="text-sm">👋</span>
+        </div>
+
+        <!-- Excitement indicator when bell is ringing -->
+        {#if bellRinging}
+          <div class="absolute -left-2 top-1/2 -translate-y-1/2 animate-ping">
+            <span class="text-2xl">✨</span>
+          </div>
+          <div class="absolute -right-2 top-1/3 animate-ping" style="animation-delay: 0.2s;">
+            <span class="text-xl">💡</span>
+          </div>
+        {/if}
       </div>
     </div>
 
     <!-- Title -->
     <h1
-      class="text-5xl md:text-7xl font-chalk text-chalkboard mb-4 text-shadow-crayon"
+      class="text-5xl md:text-7xl lg:text-8xl font-chalk text-chalkboard mb-4
+             transition-all duration-700 delay-100
+             {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
     >
-      IdeaRalph
+      Idea<span class="text-playground-red">Ralph</span>
     </h1>
 
-    <p class="ralph-voice text-2xl md:text-3xl text-chalkboard mb-2">
+    <p
+      class="ralph-voice text-xl md:text-2xl lg:text-3xl text-chalkboard mb-2
+             transition-all duration-700 delay-200
+             {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
+    >
       "I'm a idea generator! And I'm helping!"
     </p>
 
-    <p class="text-lg text-chalkboard/80 mb-8 max-w-md">
+    <p
+      class="text-base md:text-lg text-chalkboard/80 mb-8 max-w-lg
+             transition-all duration-700 delay-300
+             {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
+    >
       The dumbest genius you'll ever meet. Generate startup ideas so weird
       they might actually work.
     </p>
 
     <!-- Spawn Button -->
-    <button
-      onclick={spawnRalph}
-      class="btn-crayon text-2xl flex items-center gap-3 {bellRinging
-        ? 'animate-wiggle'
-        : ''}"
+    <div
+      class="transition-all duration-700 delay-400
+             {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
     >
-      <span class="text-3xl">🔔</span>
-      Ring the Bell
-    </button>
+      <button
+        onclick={spawnRalph}
+        class="btn-crayon text-xl md:text-2xl flex items-center gap-3 group
+               {bellRinging ? 'animate-wiggle' : ''}"
+      >
+        <span class="text-2xl md:text-3xl group-hover:animate-wiggle">🔔</span>
+        Ring the Bell
+      </button>
+    </div>
 
     <!-- Tagline -->
-    <p class="mt-8 text-sm text-chalkboard/60">
+    <p
+      class="mt-8 text-sm text-chalkboard/60
+             transition-all duration-700 delay-500
+             {mounted ? 'opacity-100' : 'opacity-0'}"
+    >
       {#if data.session}
-        Ready to spawn Ralph!
+        <span class="text-playground-green">✓</span> Ready to spawn Ralph!
       {:else}
-        Sign up free to start generating ideas
+        Sign up free • No credit card required
       {/if}
     </p>
-  </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <span class="text-2xl text-chalkboard/40">↓</span>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="bg-chalkboard py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid grid-cols-3 gap-4 md:gap-8">
+        {#each stats as stat, i}
+          <div class="text-center">
+            <span class="text-3xl md:text-4xl mb-2 block">{stat.icon}</span>
+            <p class="text-2xl md:text-4xl font-chalk text-ralph-yellow">{stat.value}</p>
+            <p class="text-xs md:text-sm text-white/60">{stat.label}</p>
+          </div>
+        {/each}
+      </div>
+      <p class="text-center text-white/40 text-xs mt-4">*Subjectively speaking</p>
+    </div>
+  </section>
 
   <!-- Features Section -->
-  <section class="bg-paper py-16 px-4">
+  <section class="bg-paper py-16 md:py-24 px-4">
     <div class="max-w-4xl mx-auto">
-      <h2 class="text-4xl font-chalk text-center text-chalkboard mb-12">
+      <h2 class="text-3xl md:text-4xl font-chalk text-center text-chalkboard mb-4">
         How It Works
       </h2>
+      <p class="text-center text-chalkboard/60 mb-12 max-w-md mx-auto">
+        Three simple steps to genius (or at least entertaining) ideas
+      </p>
 
-      <div class="grid md:grid-cols-3 gap-8">
+      <div class="grid md:grid-cols-3 gap-8 md:gap-12">
         <!-- Step 1 -->
-        <div class="text-center">
+        <div class="text-center group">
           <div
-            class="w-20 h-20 bg-ralph-yellow rounded-full mx-auto mb-4 flex items-center justify-center border-4 border-chalkboard shadow-crayon"
+            class="w-24 h-24 bg-ralph-yellow rounded-full mx-auto mb-4 flex items-center justify-center
+                   border-4 border-chalkboard shadow-crayon
+                   transition-transform group-hover:scale-110 group-hover:rotate-3"
           >
-            <span class="text-3xl">🏖️</span>
+            <span class="text-4xl">🏖️</span>
           </div>
           <h3 class="font-chalk text-xl mb-2">1. Sandbox</h3>
           <p class="ralph-voice text-chalkboard/80">
-            Ralph digs around in his brain and finds weird connections
+            "Ralph digs around in his brain and finds weird connections"
           </p>
         </div>
 
+        <!-- Arrow -->
+        <div class="hidden md:flex items-center justify-center">
+          <span class="text-4xl text-chalkboard/30">→</span>
+        </div>
+
         <!-- Step 2 -->
-        <div class="text-center">
+        <div class="text-center group md:col-start-2 md:row-start-1">
           <div
-            class="w-20 h-20 bg-playground-green rounded-full mx-auto mb-4 flex items-center justify-center border-4 border-chalkboard shadow-crayon"
+            class="w-24 h-24 bg-playground-green rounded-full mx-auto mb-4 flex items-center justify-center
+                   border-4 border-chalkboard shadow-crayon
+                   transition-transform group-hover:scale-110 group-hover:-rotate-3"
           >
-            <span class="text-3xl">🎢</span>
+            <span class="text-4xl">🎢</span>
           </div>
           <h3 class="font-chalk text-xl mb-2">2. Swing Set</h3>
           <p class="ralph-voice text-chalkboard/80">
-            Ideas swing back and forth until they get momentum
+            "Ideas swing back and forth until they get momentum"
           </p>
         </div>
 
         <!-- Step 3 -->
-        <div class="text-center">
+        <div class="text-center group md:col-start-3">
           <div
-            class="w-20 h-20 bg-sky-blue rounded-full mx-auto mb-4 flex items-center justify-center border-4 border-chalkboard shadow-crayon"
+            class="w-24 h-24 bg-sky-blue rounded-full mx-auto mb-4 flex items-center justify-center
+                   border-4 border-chalkboard shadow-crayon
+                   transition-transform group-hover:scale-110 group-hover:rotate-3"
           >
-            <span class="text-3xl">⭐</span>
+            <span class="text-4xl">⭐</span>
           </div>
           <h3 class="font-chalk text-xl mb-2">3. Gold Star</h3>
           <p class="ralph-voice text-chalkboard/80">
-            You get a PRD that's actually genius (probably)
+            "You get a PRD that's actually genius (probably)"
           </p>
         </div>
       </div>
@@ -119,47 +213,122 @@
   </section>
 
   <!-- Dope Ideas Section -->
-  <section class="bg-chalkboard py-16 px-4">
+  <section class="bg-gradient-to-b from-chalkboard to-chalkboard/90 py-16 md:py-24 px-4">
     <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-4xl font-chalk text-ralph-yellow mb-8">
+      <h2 class="text-3xl md:text-4xl font-chalk text-ralph-yellow mb-4">
         Ideas So Dumb They're Genius
       </h2>
+      <p class="text-white/60 mb-12">Real examples from Ralph's beautiful brain</p>
 
       <div class="grid md:grid-cols-2 gap-6">
-        <div class="thought-bubble bg-paper text-left">
-          <p class="ralph-voice">
+        <div
+          class="thought-bubble bg-paper text-left hover:scale-[1.02] transition-transform cursor-default"
+        >
+          <p class="ralph-voice text-lg">
             "What if dogs had their own social media? My dog would post about
             butts a lot."
           </p>
-          <p class="text-sm text-chalkboard/60 mt-2">— Actual Ralph idea</p>
+          <div class="flex items-center justify-between mt-4">
+            <p class="text-sm text-chalkboard/60">— Actual Ralph idea</p>
+            <div class="flex gap-1">
+              <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span class="opacity-30">⭐</span>
+            </div>
+          </div>
         </div>
 
-        <div class="thought-bubble bg-paper text-left">
-          <p class="ralph-voice">
+        <div
+          class="thought-bubble bg-paper text-left hover:scale-[1.02] transition-transform cursor-default"
+        >
+          <p class="ralph-voice text-lg">
+            "Uber but the cars are boats and the roads are rivers. Wait, that's just boats."
+          </p>
+          <div class="flex items-center justify-between mt-4">
+            <p class="text-sm text-chalkboard/60">— Dope level: 3/5</p>
+            <div class="flex gap-1">
+              <span>⭐</span><span>⭐</span><span>⭐</span><span class="opacity-30">⭐</span><span class="opacity-30">⭐</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="thought-bubble bg-paper text-left hover:scale-[1.02] transition-transform cursor-default"
+        >
+          <p class="ralph-voice text-lg">
+            "AI that writes your excuses for being late. It learns your boss's personality!"
+          </p>
+          <div class="flex items-center justify-between mt-4">
+            <p class="text-sm text-chalkboard/60">— Gold star material</p>
+            <div class="flex gap-1">
+              <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="thought-bubble bg-paper text-left hover:scale-[1.02] transition-transform cursor-default"
+        >
+          <p class="ralph-voice text-lg">
             "This idea tastes like purple and also like money!"
           </p>
-          <p class="text-sm text-chalkboard/60 mt-2">— Dope level: 5/5</p>
+          <div class="flex items-center justify-between mt-4">
+            <p class="text-sm text-chalkboard/60">— Classic Ralph</p>
+            <div class="flex gap-1">
+              <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <p class="text-white/80 mt-8 ralph-voice">
-        Airbnb sounded dumb. Uber sounded dumb. Twitter sounded dumb.
-        <br />
-        <span class="text-ralph-yellow">All of them worked.</span>
+      <div class="mt-12 p-6 bg-white/5 rounded-lg border border-white/10">
+        <p class="text-white/80 ralph-voice text-lg">
+          Airbnb sounded dumb. Uber sounded dumb. Twitter sounded dumb.
+        </p>
+        <p class="text-ralph-yellow font-chalk text-2xl mt-2">
+          All of them worked.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="bg-playground-sunset py-16 md:py-24 px-4">
+    <div class="max-w-2xl mx-auto text-center">
+      <RalphAvatar size="lg" mood="excited" />
+      <h2 class="font-chalk text-3xl md:text-4xl text-chalkboard mt-6 mb-4">
+        Ready to Generate Some Genius?
+      </h2>
+      <p class="ralph-voice text-chalkboard/80 mb-8">
+        "My brain has so many ideas it hurts! Let me share them with you!"
       </p>
+      <button
+        onclick={spawnRalph}
+        class="btn-crayon text-xl md:text-2xl"
+      >
+        🔔 Ring the Bell
+      </button>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-paper py-8 px-4 text-center">
-    <p class="text-chalkboard/60">
-      Built with 🖍️ by
-      <a href="https://vibeship.com" class="text-sky-blue hover:underline">
-        Vibeship
-      </a>
-    </p>
-    <p class="text-sm text-chalkboard/40 mt-2">
-      "I'm helping!" — Ralph Wiggum
-    </p>
+  <footer class="bg-paper py-8 px-4">
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-ralph-yellow rounded-full flex items-center justify-center border-2 border-chalkboard">
+          <span class="text-sm">🧒</span>
+        </div>
+        <span class="font-chalk text-chalkboard">IdeaRalph</span>
+      </div>
+
+      <p class="text-chalkboard/60 text-sm">
+        Built with 🖍️ by
+        <a href="https://vibeship.com" class="text-sky-blue hover:underline">
+          Vibeship
+        </a>
+      </p>
+
+      <p class="text-chalkboard/40 text-sm ralph-voice">
+        "I'm helping!" — Ralph Wiggum
+      </p>
+    </div>
   </footer>
 </main>
