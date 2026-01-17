@@ -482,24 +482,22 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
             <h2 class="font-chalk text-xl text-chalkboard">Install Ralph Plugin</h2>
           </div>
 
-          <p class="text-chalkboard/70 text-sm mb-4">Open a new terminal and run these commands:</p>
+          <p class="text-chalkboard/70 text-sm mb-3">Open a terminal and paste this:</p>
 
-          <div class="space-y-3 mb-4">
-            <div class="bg-chalkboard rounded-lg p-3">
-              <div class="text-xs text-white/50 mb-1"># Clone the plugin</div>
-              <code class="text-sm text-playground-green font-mono break-all">git clone https://github.com/anthropics/claude-code.git ~/claude-code-temp</code>
-            </div>
-
-            <div class="bg-chalkboard rounded-lg p-3">
-              <div class="text-xs text-white/50 mb-1"># Copy to plugins folder</div>
-              <code class="text-sm text-playground-green font-mono break-all">cp -r ~/claude-code-temp/plugins/ralph-wiggum ~/.claude/plugins/</code>
-            </div>
-
-            <div class="bg-chalkboard rounded-lg p-3">
-              <div class="text-xs text-white/50 mb-1"># Clean up</div>
-              <code class="text-sm text-playground-green font-mono break-all">rm -rf ~/claude-code-temp</code>
-            </div>
+          <div class="bg-chalkboard rounded-lg p-3 mb-3">
+            <code class="text-xs text-playground-green font-mono break-all">git clone https://github.com/anthropics/claude-code.git ~/cc-temp && cp -r ~/cc-temp/plugins/ralph-wiggum ~/.claude/plugins/ && rm -rf ~/cc-temp</code>
           </div>
+
+          <button
+            onclick={() => {
+              navigator.clipboard.writeText('git clone https://github.com/anthropics/claude-code.git ~/cc-temp && cp -r ~/cc-temp/plugins/ralph-wiggum ~/.claude/plugins/ && rm -rf ~/cc-temp');
+              copied = true;
+              setTimeout(() => copied = false, 2000);
+            }}
+            class="btn-crayon w-full text-sm mb-3"
+          >
+            {copied ? '✅ Copied!' : '📋 Copy Install Command'}
+          </button>
 
           <div class="bg-ralph-yellow/20 rounded-lg p-3 mb-4">
             <p class="text-sm text-chalkboard">
