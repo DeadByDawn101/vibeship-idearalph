@@ -500,9 +500,13 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
           </button>
 
           <div class="bg-ralph-yellow/20 rounded-lg p-3 mb-4">
-            <p class="text-sm text-chalkboard">
-              <span class="font-bold">Important:</span> After installing, restart Claude Code (close and reopen the terminal).
+            <p class="text-sm text-chalkboard mb-2">
+              <span class="font-bold">Important:</span> After installing, restart Claude Code:
             </p>
+            <div class="text-sm text-chalkboard/80">
+              1. Type <code class="bg-chalkboard/10 px-1 rounded">/exit</code> to close Claude Code<br/>
+              2. Run <code class="bg-chalkboard/10 px-1 rounded">claude</code> to start it again
+            </div>
           </div>
 
           <div class="flex gap-2">
@@ -561,6 +565,19 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
               I have the JSON →
             </button>
           </div>
+
+          <button
+            onclick={() => {
+              if (typeof window !== 'undefined') {
+                localStorage.removeItem('idearalph-plugin-installed');
+                hasInstalledPlugin = false;
+              }
+              step = 'setup';
+            }}
+            class="w-full text-chalkboard/40 hover:text-chalkboard/60 text-xs py-2 mt-2"
+          >
+            I don't have the Ralph plugin yet
+          </button>
         </div>
 
       {:else if step === 'paste'}
