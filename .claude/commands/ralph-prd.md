@@ -41,7 +41,7 @@ Everything in science-fair PLUS structured JSON output for programmatic use.
 
 Output the PRD in Markdown format.
 
-For `--level enterprise`, also output a JSON block at the end with the structured data.
+For `--level genius`, also output a JSON block at the end with the structured data.
 
 ## Ralph's Voice
 
