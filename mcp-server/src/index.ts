@@ -24,7 +24,7 @@ import {
 const server = new Server(
   {
     name: "idearalph-mcp",
-    version: "1.0.0",
+    version: "2.0.0", // Bumped version - now API-free!
   },
   {
     capabilities: {
@@ -38,7 +38,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools };
 });
 
-// Handle tool calls
+// Handle tool calls - now returns prompts for Claude to process directly
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
@@ -48,27 +48,27 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (name) {
       case "idearalph_brainstorm": {
         const parsed = brainstormSchema.parse(args);
-        result = await handleBrainstorm(parsed);
+        result = handleBrainstorm(parsed);
         break;
       }
       case "idearalph_validate": {
         const parsed = validateSchema.parse(args);
-        result = await handleValidate(parsed);
+        result = handleValidate(parsed);
         break;
       }
       case "idearalph_refine": {
         const parsed = refineSchema.parse(args);
-        result = await handleRefine(parsed);
+        result = handleRefine(parsed);
         break;
       }
       case "idearalph_prd": {
         const parsed = prdSchema.parse(args);
-        result = await handlePRD(parsed);
+        result = handlePRD(parsed);
         break;
       }
       case "idearalph_architecture": {
         const parsed = architectureSchema.parse(args);
-        result = await handleArchitecture(parsed);
+        result = handleArchitecture(parsed);
         break;
       }
       default:
@@ -101,7 +101,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("IdeaRalph MCP Server running on stdio");
+  console.error("IdeaRalph MCP Server v2.0 running on stdio (no API key required!)");
 }
 
 main().catch((error) => {

@@ -343,9 +343,20 @@ cp -r plugins/idearalph ~/.claude/commands/
 
 ---
 
-## MCP Server
+## MCP Server v2.0
 
-IdeaRalph also works as an MCP (Model Context Protocol) server, enabling Claude to automatically invoke Ralph tools during brainstorming sessions.
+IdeaRalph works as an MCP (Model Context Protocol) server, enabling Claude to automatically invoke Ralph tools during brainstorming sessions.
+
+**No API key required!** The MCP is a prompt provider - it returns structured prompts that Claude Code processes directly.
+
+> **UX Documentation**: See `docs/MCP_UX_PATTERNS.md` for detailed UX guidelines, Spawner integration flow, and session continuity patterns.
+
+### How It Works
+
+```
+Old way:  User → Claude Code → MCP → Anthropic API → Response (needed API key!)
+New way:  User → Claude Code → MCP → Returns prompt → Claude processes directly
+```
 
 ### MCP Tools Available
 
@@ -372,14 +383,13 @@ IdeaRalph also works as an MCP (Model Context Protocol) server, enabling Claude 
      "mcpServers": {
        "idearalph": {
          "command": "node",
-         "args": ["<path>/mcp-server/dist/index.js"],
-         "env": {
-           "ANTHROPIC_API_KEY": "your-key"
-         }
+         "args": ["<path>/mcp-server/dist/index.js"]
        }
      }
    }
    ```
+
+   That's it - no API key needed!
 
 3. **Use naturally**: Just ask Claude to brainstorm ideas - it will invoke the tools automatically!
 
@@ -398,3 +408,25 @@ Each tool suggests the next step and recommends Spawner skills for building.
 - **max**: Run all iterations for maximum polish
 
 See `mcp-server/README.md` for full documentation.
+
+### Spawner Integration
+
+After architecture generation, IdeaRalph checks for Spawner and handles the handoff:
+
+**If Spawner is available:**
+- Offers to start building immediately
+- Loads appropriate skills (supabase-backend, sveltekit, etc.)
+
+**If Spawner is NOT available:**
+- Explains benefits: FREE, 450+ skills, better output
+- Offers to install automatically (Claude handles MCP config)
+- Saves work to files first
+- Provides resume prompt for after restart
+
+**Key UX Principles:**
+1. Never dump commands - always ASK what user wants
+2. Offer to do things FOR them (don't explain how)
+3. Always include a "pause" option
+4. Session continuity via resume prompts
+
+See `docs/MCP_UX_PATTERNS.md` for the complete UX specification.

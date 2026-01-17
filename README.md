@@ -81,6 +81,8 @@ Use IdeaRalph directly in your IDE with Claude Code slash commands.
 
 Let Claude automatically use Ralph tools whenever you're brainstorming ideas.
 
+**No API key required!** The MCP server is a prompt provider - it returns structured prompts that Claude Code processes directly.
+
 #### Installation
 
 1. **Build the server**:
@@ -96,10 +98,7 @@ Let Claude automatically use Ralph tools whenever you're brainstorming ideas.
      "mcpServers": {
        "idearalph": {
          "command": "node",
-         "args": ["/path/to/vibeship-idearalph/mcp-server/dist/index.js"],
-         "env": {
-           "ANTHROPIC_API_KEY": "your-anthropic-api-key"
-         }
+         "args": ["/path/to/vibeship-idearalph/mcp-server/dist/index.js"]
        }
      }
    }
@@ -199,11 +198,10 @@ vibeship-idearalph/
 │   │   └── components/      # Svelte components
 │   └── routes/
 │       └── api/             # API endpoints
-├── mcp-server/              # MCP Server (standalone)
+├── mcp-server/              # MCP Server v2.0 (prompt provider)
 │   ├── src/
 │   │   ├── index.ts         # Server entry point
-│   │   ├── tools.ts         # MCP tool definitions
-│   │   └── ralph.ts         # Ralph engine for MCP
+│   │   └── tools.ts         # PMF dimensions, prompts, handlers
 │   └── package.json
 ├── .claude/
 │   └── commands/            # Claude Code plugin
@@ -249,7 +247,7 @@ npm run dev
 ## Environment Variables
 
 ```env
-# Anthropic (required for AI features)
+# Anthropic (required for SvelteKit app, NOT needed for MCP server)
 ANTHROPIC_API_KEY=your-key
 
 # Supabase (optional, for persistence)
@@ -260,6 +258,8 @@ SUPABASE_SERVICE_ROLE_KEY=
 # App
 PUBLIC_APP_URL=http://localhost:5173
 ```
+
+**Note**: The MCP server does NOT need an API key - it works natively inside Claude Code.
 
 ---
 

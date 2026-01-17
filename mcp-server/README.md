@@ -1,6 +1,23 @@
-# IdeaRalph MCP Server
+# IdeaRalph MCP Server v2.0
 
-AI-powered startup idea generation, validation, and refinement using Claude.
+AI-powered startup idea generation, validation, and refinement - designed for Claude Code.
+
+**No API key required!** This MCP works natively inside Claude Code.
+
+## How It Works
+
+Unlike traditional MCPs that make external API calls, IdeaRalph v2.0 is a **prompt provider**. It returns structured prompts and scoring criteria that Claude (already running in Claude Code) processes directly.
+
+```
+Old way:  User → Claude Code → MCP → Anthropic API → Response (needed API key!)
+New way:  User → Claude Code → MCP → Returns prompt → Claude processes it directly
+```
+
+This means:
+- No API key needed
+- No extra latency from double API calls
+- Works offline (MCP itself doesn't need internet)
+- Simpler, more reliable
 
 ## Tools Available
 
@@ -28,7 +45,7 @@ Brainstorm → Validate → Refine → PRD → Architecture → Build with Spawn
 
 ### Prerequisites
 - Node.js 18+
-- An Anthropic API key
+- Claude Code
 
 ### Build the Server
 
@@ -40,38 +57,28 @@ npm run build
 
 ### Configure Claude Code
 
-Add to your Claude Code MCP settings (`~/.config/claude-code/mcp.json` on Mac/Linux or `%APPDATA%\claude-code\mcp.json` on Windows):
+Add to your Claude Code MCP settings:
+
+**Mac/Linux**: `~/.claude/claude_desktop_config.json`
+**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "idearalph": {
       "command": "node",
-      "args": ["C:/Users/USER/Desktop/vibeship-idearalph/mcp-server/dist/index.js"],
-      "env": {
-        "ANTHROPIC_API_KEY": "your-api-key-here"
-      }
+      "args": ["/path/to/vibeship-idearalph/mcp-server/dist/index.js"]
     }
   }
 }
 ```
 
-**Important**: Replace the path with your actual installation path.
+That's it! No API key needed.
 
-### Alternative: Use npx (after publishing)
+### Alternative: Claude Code CLI
 
-```json
-{
-  "mcpServers": {
-    "idearalph": {
-      "command": "npx",
-      "args": ["idearalph-mcp"],
-      "env": {
-        "ANTHROPIC_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
+```bash
+claude mcp add idearalph -- node /path/to/mcp-server/dist/index.js
 ```
 
 ## Usage Examples
@@ -100,22 +107,26 @@ Add to your Claude Code MCP settings (`~/.config/claude-code/mcp.json` on Mac/Li
 
 Each idea is scored on 10 dimensions (1-10 scale):
 
-1. **Problem Clarity** - How clear and well-defined is the problem?
-2. **Market Size** - How large is the potential market?
-3. **Uniqueness** - How differentiated from existing solutions?
-4. **Feasibility** - How technically and operationally feasible?
-5. **Monetization** - How clear is the path to revenue?
-6. **Timing** - Is the market ready for this now?
-7. **Virality** - Does it have natural word-of-mouth potential?
-8. **Defensibility** - Can this build a moat over time?
-9. **Team Fit** - How well does this fit an indie founder?
-10. **Ralph Factor** - The X-factor excitement score!
+| Dimension | What It Measures |
+|-----------|------------------|
+| **Problem Clarity** | How clear and well-defined is the problem? |
+| **Market Size** | How large is the potential market? |
+| **Uniqueness** | How differentiated from existing solutions? |
+| **Feasibility** | How technically and operationally feasible? |
+| **Monetization** | How clear is the path to revenue? |
+| **Timing** | Is the market ready for this now? |
+| **Virality** | Does it have natural word-of-mouth potential? |
+| **Defensibility** | Can this build a moat over time? |
+| **Team Fit** | How well does this fit an indie founder? |
+| **Ralph Factor** | The X-factor - does this make Ralph excited? |
+
+Each dimension has detailed scoring criteria (1-3, 4-6, 7-8, 9-10 bands) that guide consistent evaluation.
 
 ## PRD Levels
 
 - **Napkin**: Quick 1-page sketch (5 min read)
-- **Science Fair**: Detailed with personas, user stories (15 min read)
-- **Genius**: Investor-ready with TAM/SAM/SOM, business model (30+ min read)
+- **Science Fair**: Detailed with personas, user stories, technical considerations (15 min read)
+- **Genius**: Investor-ready with TAM/SAM/SOM, business model, go-to-market (30+ min read)
 
 ## Refinement Modes
 
@@ -125,14 +136,38 @@ Each idea is scored on 10 dimensions (1-10 scale):
 
 ## Integration with Spawner
 
-After generating a PRD, use `idearalph_architecture` to get:
-- Recommended tech stack
-- Spawner skills to invoke for each phase
-- Implementation timeline
+After architecture generation, IdeaRalph intelligently handles the transition to building:
 
-Then use Spawner skills to build:
+### If Spawner is Available
+- Offers to start building immediately
+- Loads appropriate skills (supabase-backend, sveltekit, etc.)
+- Smooth handoff to implementation
+
+### If Spawner is NOT Available
+IdeaRalph will:
+1. Explain the benefits (FREE, 450+ specialized skills, better output)
+2. Offer to install it automatically (no manual config needed!)
+3. Save your work to files first
+4. Provide a resume prompt to continue after restart
+
+**User only needs to:**
+1. Restart Claude Code (one keyboard shortcut)
+2. Paste the resume prompt (one copy-paste)
+
+Everything else is handled automatically.
+
+## UX Philosophy
+
+IdeaRalph follows these principles (see `docs/MCP_UX_PATTERNS.md`):
+
+1. **Never dump commands** - Always ASK what user wants
+2. **Do it for them** - Don't explain how, just offer to do it
+3. **Always offer pause** - Users might need to step away
+4. **Session continuity** - Resume prompts after any restart
+
 ```
-spawner_load({ skill_id: "sveltekit", context: "Building [your idea]..." })
+❌ BAD: "Run spawner_load({ skill_id: 'supabase-backend' })"
+✅ GOOD: "Want me to load the Supabase skill and start building?"
 ```
 
 ## Development
@@ -147,6 +182,19 @@ npm run build
 # Test with MCP inspector
 npm run inspect
 ```
+
+## Architecture (for developers)
+
+The MCP server is a **prompt provider**, not an API wrapper:
+
+- `tools.ts` - Defines PMF dimensions, Ralph persona, and prompt templates
+- `index.ts` - MCP server that routes tool calls to handlers
+- Each handler returns a structured prompt that Claude processes directly
+
+Key exports:
+- `PMF_DIMENSIONS` - The 10 scoring dimensions with criteria
+- `RALPH_PERSONA` - Ralph's personality and expertise
+- `handleBrainstorm/Validate/Refine/PRD/Architecture` - Prompt generators
 
 ## License
 
