@@ -297,7 +297,7 @@ POST /api/prd/generate
 ### PRD Types (TypeScript)
 
 Key interfaces in `src/lib/ralph/types.ts`:
-- `PRDLevel`: 'basic' | 'detailed' | 'enterprise'
+- `PRDLevel`: 'napkin' | 'science-fair' | 'genius'
 - `DetailedPRD`: Full structured PRD
 - `UserPersona`: Target user definition
 - `UserStory`: User story with acceptance criteria
@@ -337,6 +337,64 @@ cp -r plugins/idearalph ~/.claude/commands/
 
 1. **Ralph Loop**: Iterative idea refinement until score threshold
 2. **PMF Scoring**: 10-dimension scoring (now includes problem clarity, uniqueness, feasibility, timing, Ralph Factor)
-3. **PRD Generation**: Basic, Detailed, or Enterprise level
+3. **PRD Generation**: Napkin, Science-Fair, or Genius level
 4. **JSON Output**: Structured data for further processing
 5. **Iteration History**: Track how ideas evolved
+
+---
+
+## MCP Server
+
+IdeaRalph also works as an MCP (Model Context Protocol) server, enabling Claude to automatically invoke Ralph tools during brainstorming sessions.
+
+### MCP Tools Available
+
+| Tool | Description |
+|------|-------------|
+| `idearalph_brainstorm` | Generate and score startup ideas for a topic |
+| `idearalph_validate` | Validate an idea on 10 PMF dimensions |
+| `idearalph_refine` | Iteratively improve idea with modes: single, target, max |
+| `idearalph_prd` | Generate PRD at napkin/science-fair/genius level |
+| `idearalph_architecture` | Get implementation plan with Spawner skills |
+
+### MCP Installation
+
+1. **Build the server**:
+   ```bash
+   cd mcp-server
+   npm install
+   npm run build
+   ```
+
+2. **Configure Claude Code** (add to MCP settings):
+   ```json
+   {
+     "mcpServers": {
+       "idearalph": {
+         "command": "node",
+         "args": ["<path>/mcp-server/dist/index.js"],
+         "env": {
+           "ANTHROPIC_API_KEY": "your-key"
+         }
+       }
+     }
+   }
+   ```
+
+3. **Use naturally**: Just ask Claude to brainstorm ideas - it will invoke the tools automatically!
+
+### The Flow
+
+```
+Brainstorm → Validate → Refine → PRD → Architecture → Build with Spawner!
+```
+
+Each tool suggests the next step and recommends Spawner skills for building.
+
+### Refinement Modes
+
+- **single**: One round of feedback
+- **target**: Keep refining until target score (default 9.5)
+- **max**: Run all iterations for maximum polish
+
+See `mcp-server/README.md` for full documentation.

@@ -1,0 +1,110 @@
+#!/usr/bin/env node
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+
+import {
+  tools,
+  brainstormSchema,
+  validateSchema,
+  refineSchema,
+  prdSchema,
+  architectureSchema,
+  handleBrainstorm,
+  handleValidate,
+  handleRefine,
+  handlePRD,
+  handleArchitecture,
+} from "./tools.js";
+
+// Create the MCP server
+const server = new Server(
+  {
+    name: "idearalph-mcp",
+    version: "1.0.0",
+  },
+  {
+    capabilities: {
+      tools: {},
+    },
+  }
+);
+
+// Handle tool listing
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+  return { tools };
+});
+
+// Handle tool calls
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  const { name, arguments: args } = request.params;
+
+  try {
+    let result: string;
+
+    switch (name) {
+      case "idearalph_brainstorm": {
+        const parsed = brainstormSchema.parse(args);
+        result = await handleBrainstorm(parsed);
+        break;
+      }
+      case "idearalph_validate": {
+        const parsed = validateSchema.parse(args);
+        result = await handleValidate(parsed);
+        break;
+      }
+      case "idearalph_refine": {
+        const parsed = refineSchema.parse(args);
+        result = await handleRefine(parsed);
+        break;
+      }
+      case "idearalph_prd": {
+        const parsed = prdSchema.parse(args);
+        result = await handlePRD(parsed);
+        break;
+      }
+      case "idearalph_architecture": {
+        const parsed = architectureSchema.parse(args);
+        result = await handleArchitecture(parsed);
+        break;
+      }
+      default:
+        throw new Error(`Unknown tool: ${name}`);
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: result,
+        },
+      ],
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Error: ${errorMessage}`,
+        },
+      ],
+      isError: true,
+    };
+  }
+});
+
+// Start the server
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("IdeaRalph MCP Server running on stdio");
+}
+
+main().catch((error) => {
+  console.error("Fatal error:", error);
+  process.exit(1);
+});
