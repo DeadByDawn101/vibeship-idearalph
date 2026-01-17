@@ -1,137 +1,195 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { RalphAvatar, HeroVideo } from '$lib/components';
+  import { HeroVideo, DopeMeter, RalphAvatar } from '$lib/components';
 
   let { data } = $props();
 
-  let bellRinging = $state(false);
-  let mounted = $state(false);
+  // UI State
+  let step = $state<'bell' | 'prompt' | 'paste' | 'result'>('bell');
+  let userHint = $state('');
+  let pastedResult = $state('');
+  let currentIdea = $state<{name: string; idea: string; dopeLevel: number; ralphQuote: string} | null>(null);
+  let error = $state<string | null>(null);
+  let copied = $state(false);
 
-  // Trigger entrance animations
-  $effect(() => {
-    mounted = true;
-  });
+  // The Ralph prompt template for Claude Code
+  const getRalphPrompt = (hint?: string) => `You are Ralph Wiggum from The Simpsons, but you're secretly a genius at generating startup ideas. Your ideas sound dumb at first but are actually brilliant.
 
-  async function spawnRalph() {
-    bellRinging = true;
+${hint ? `The user wants ideas about: ${hint}` : 'Generate a random startup idea.'}
 
-    // Bell ring animation
-    await new Promise((r) => setTimeout(r, 800));
+Generate ONE startup idea and respond in this EXACT JSON format:
+{
+  "name": "Catchy Startup Name",
+  "idea": "2-3 sentence description of the idea that sounds dumb but is actually genius",
+  "dopeLevel": 4,
+  "ralphQuote": "A funny Ralph Wiggum quote about this idea"
+}
 
-    if (data.session) {
-      goto('/playground');
-    } else {
-      goto('/auth/login');
+dopeLevel is 1-5 (5 = genius). Make it weird, surprising, and secretly brilliant. Keep Ralph's innocent, slightly confused voice.`;
+
+  function ringTheBell() {
+    step = 'prompt';
+  }
+
+  function copyPrompt() {
+    navigator.clipboard.writeText(getRalphPrompt(userHint));
+    copied = true;
+    setTimeout(() => copied = false, 2000);
+  }
+
+  function parseResult() {
+    error = null;
+    try {
+      // Try to extract JSON from the pasted text
+      const jsonMatch = pastedResult.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('No JSON found');
+
+      const parsed = JSON.parse(jsonMatch[0]);
+      if (!parsed.name || !parsed.idea) throw new Error('Invalid format');
+
+      currentIdea = {
+        name: parsed.name,
+        idea: parsed.idea,
+        dopeLevel: parsed.dopeLevel || 3,
+        ralphQuote: parsed.ralphQuote || "I made a idea!"
+      };
+      step = 'result';
+    } catch (err) {
+      error = "Couldn't parse that. Make sure you copied the full JSON response!";
     }
   }
 
-  const stats = [
-    { value: '∞', label: 'Ideas Generated', icon: '💡' },
-    { value: '5⭐', label: 'Max Dope Level', icon: '🌟' },
-    { value: '0', label: 'Bad Ideas*', icon: '🚀' }
-  ];
+  function startOver() {
+    step = 'bell';
+    userHint = '';
+    pastedResult = '';
+    currentIdea = null;
+    error = null;
+  }
+
+  function generateAnother() {
+    step = 'prompt';
+    pastedResult = '';
+    currentIdea = null;
+  }
 </script>
 
 <main class="bg-playground-sunset overflow-hidden">
   <!-- Hero Section - Half-screen Video Background -->
   <HeroVideo size="half">
-    <!-- Overlay Content -->
-    <div class="text-center max-w-4xl mx-auto">
-      <!-- Handwritten "Hi I'm" label -->
-      <div
-        class="mb-4 transition-all duration-700 {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
-      >
-        <span class="inline-block bg-white/90 backdrop-blur-sm rounded-full px-6 py-2
-                     border-2 border-chalkboard shadow-crayon transform -rotate-2">
-          <span class="ralph-voice text-lg md:text-xl text-chalkboard">Hi, I'm</span>
-        </span>
-      </div>
+    <div class="text-center w-full max-w-2xl mx-auto px-4">
 
-      <!-- Title -->
-      <h1
-        class="text-6xl md:text-8xl lg:text-9xl font-chalk mb-6
-               transition-all duration-700 delay-100
-               {mounted ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95'}"
-      >
-        <span class="text-chalkboard drop-shadow-[0_4px_0_rgba(0,0,0,0.2)]">Idea</span><span
-          class="text-playground-red drop-shadow-[0_4px_0_rgba(0,0,0,0.2)]">Ralph</span>
-      </h1>
-
-      <!-- Tagline in thought bubble style -->
-      <div
-        class="mb-8 transition-all duration-700 delay-200
-               {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
-      >
-        <div class="inline-block bg-white/95 backdrop-blur-sm rounded-2xl px-8 py-4
-                    border-4 border-chalkboard shadow-crayon-lg relative">
-          <p class="ralph-voice text-xl md:text-2xl lg:text-3xl text-chalkboard">
-            "I'm a idea generator! And I'm helping!"
-          </p>
-          <!-- Speech bubble tail -->
-          <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-white border-r-4 border-b-4
-                      border-chalkboard transform rotate-45"></div>
-        </div>
-      </div>
-
-      <!-- Subtitle -->
-      <p
-        class="text-lg md:text-xl text-chalkboard/90 mb-10 max-w-2xl mx-auto
-               transition-all duration-700 delay-300 font-medium
-               {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
-      >
-        The dumbest genius you'll ever meet. Generate startup ideas so weird
-        they might actually work.
-      </p>
-
-      <!-- CTA Button -->
-      <div
-        class="transition-all duration-700 delay-400
-               {mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}"
-      >
+      {#if step === 'bell'}
+        <!-- Initial State: Ring the Bell -->
         <button
-          onclick={spawnRalph}
+          onclick={ringTheBell}
           class="btn-crayon text-xl md:text-2xl px-10 py-5 flex items-center gap-4 mx-auto
-                 transform hover:scale-105 transition-transform
-                 {bellRinging ? 'animate-wiggle' : ''}"
+                 transform hover:scale-105 transition-transform"
         >
-          <span class="text-3xl md:text-4xl group-hover:animate-wiggle">🔔</span>
+          <span class="text-3xl md:text-4xl">🔔</span>
           <span>Ring the Bell</span>
         </button>
-      </div>
+        <p class="mt-12 text-chalkboard/70 text-sm">
+          Powered by your Claude Code • No API costs
+        </p>
 
-      <!-- Status tag -->
-      <p
-        class="mt-8 transition-all duration-700 delay-500
-               {mounted ? 'opacity-100' : 'opacity-0'}"
-      >
-        {#if data.session}
-          <span class="inline-flex items-center gap-2 bg-playground-green/20 backdrop-blur-sm
-                       text-chalkboard px-4 py-2 rounded-full border-2 border-playground-green/50">
-            <span class="text-playground-green">✓</span> Ready to spawn Ralph!
-          </span>
-        {:else}
-          <span class="inline-flex items-center gap-2 bg-white/30 backdrop-blur-sm
-                       text-chalkboard px-4 py-2 rounded-full">
-            Sign up free • No credit card required
-          </span>
-        {/if}
-      </p>
+      {:else if step === 'prompt'}
+        <!-- Step 1: Show prompt to copy -->
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg">
+          <h2 class="font-chalk text-2xl text-chalkboard mb-4">
+            1. Copy this prompt to Claude Code
+          </h2>
+
+          <input
+            bind:value={userHint}
+            placeholder="Optional: Give Ralph a hint (e.g., 'fitness apps', 'AI for pets')"
+            class="w-full px-4 py-3 rounded-lg border-2 border-chalkboard bg-white
+                   focus:outline-none focus:ring-2 focus:ring-sky-blue mb-4"
+          />
+
+          <div class="bg-chalkboard/5 rounded-lg p-4 mb-4 text-left max-h-32 overflow-y-auto">
+            <pre class="text-xs text-chalkboard/80 whitespace-pre-wrap font-mono">{getRalphPrompt(userHint).slice(0, 200)}...</pre>
+          </div>
+
+          <button
+            onclick={copyPrompt}
+            class="btn-crayon w-full text-lg mb-3"
+          >
+            {copied ? '✅ Copied!' : '📋 Copy Prompt'}
+          </button>
+
+          <button
+            onclick={() => step = 'paste'}
+            class="w-full text-chalkboard/70 hover:text-chalkboard py-2 transition-colors"
+          >
+            I've run it in Claude Code →
+          </button>
+        </div>
+
+      {:else if step === 'paste'}
+        <!-- Step 2: Paste the result -->
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg">
+          <h2 class="font-chalk text-2xl text-chalkboard mb-4">
+            2. Paste Claude's response
+          </h2>
+
+          <textarea
+            bind:value={pastedResult}
+            placeholder="Paste the JSON response from Claude Code here..."
+            class="w-full px-4 py-3 rounded-lg border-2 border-chalkboard bg-white
+                   focus:outline-none focus:ring-2 focus:ring-sky-blue resize-none mb-4 font-mono text-sm"
+            rows="6"
+          ></textarea>
+
+          {#if error}
+            <p class="text-playground-red text-sm mb-3">{error}</p>
+          {/if}
+
+          <div class="flex gap-3">
+            <button onclick={() => step = 'prompt'} class="btn-crayon flex-1 bg-gray-100">
+              ← Back
+            </button>
+            <button onclick={parseResult} class="btn-crayon flex-1">
+              🚀 Show My Idea
+            </button>
+          </div>
+        </div>
+
+      {:else if step === 'result' && currentIdea}
+        <!-- Step 3: Display the result -->
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg">
+          <div class="text-left">
+            <div class="flex items-start justify-between mb-4">
+              <h3 class="font-chalk text-2xl text-chalkboard">{currentIdea.name}</h3>
+              <DopeMeter level={currentIdea.dopeLevel} size="sm" />
+            </div>
+
+            <p class="text-chalkboard text-lg mb-4">{currentIdea.idea}</p>
+
+            <div class="bg-ralph-yellow/20 rounded-lg p-3 mb-6">
+              <p class="ralph-voice text-chalkboard italic">"{currentIdea.ralphQuote}"</p>
+            </div>
+
+            <div class="flex gap-3">
+              <button onclick={startOver} class="btn-crayon flex-1 bg-gray-100">
+                🏠 Start Over
+              </button>
+              <button onclick={generateAnother} class="btn-crayon flex-1">
+                🎲 Another One
+              </button>
+            </div>
+          </div>
+        </div>
+      {/if}
+
     </div>
   </HeroVideo>
 
-  <!-- Stats Section -->
-  <section class="bg-chalkboard py-12 px-4">
-    <div class="max-w-4xl mx-auto">
-      <div class="grid grid-cols-3 gap-4 md:gap-8">
-        {#each stats as stat, i}
-          <div class="text-center">
-            <span class="text-3xl md:text-4xl mb-2 block">{stat.icon}</span>
-            <p class="text-2xl md:text-4xl font-chalk text-ralph-yellow">{stat.value}</p>
-            <p class="text-xs md:text-sm text-white/60">{stat.label}</p>
-          </div>
-        {/each}
-      </div>
-      <p class="text-center text-white/40 text-xs mt-4">*Subjectively speaking</p>
+  <!-- Tagline Section -->
+  <section class="bg-chalkboard py-10 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-4xl md:text-5xl lg:text-6xl font-chalk tracking-wide">
+        <span class="text-white">Stupid</span> <span class="text-ralph-yellow">Smart.</span>
+      </p>
     </div>
   </section>
 
@@ -288,7 +346,7 @@
         "My brain has so many ideas it hurts! Let me share them with you!"
       </p>
       <button
-        onclick={spawnRalph}
+        onclick={() => { step = 'prompt'; window.scrollTo({ top: 0, behavior: 'smooth' }); }}
         class="btn-crayon text-xl md:text-2xl"
       >
         🔔 Ring the Bell
