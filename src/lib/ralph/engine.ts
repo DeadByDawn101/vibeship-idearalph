@@ -6,7 +6,9 @@ import {
   GENERATE_IDEA_PROMPT,
   REFINE_IDEA_PROMPT,
   GENERATE_PRD_PROMPT,
-  EVALUATE_IDEA_PROMPT
+  EVALUATE_IDEA_PROMPT,
+  GENERATE_DETAILED_PRD_PROMPT,
+  GENERATE_DETAILED_PRD_JSON_PROMPT
 } from './prompts';
 import type {
   RalphIdea,
@@ -16,7 +18,10 @@ import type {
   RalphResponse,
   PMFScores,
   GenerateIdeaInput,
-  RefineIdeaInput
+  RefineIdeaInput,
+  PRDLevel,
+  PRDConfig,
+  DetailedPRD
 } from './types';
 import { RALPH_QUOTES } from './types';
 
@@ -295,4 +300,366 @@ export function getLoopStatusMessage(result: RalphLoopResult): {
     message: `Dope level ${result.finalDopeLevel}. This idea needs more work.`,
     quote: getRandomQuote('meh')
   };
+}
+
+// ============================================================================
+// DETAILED PRD GENERATION
+// ============================================================================
+
+/**
+ * Default PRD configuration
+ */
+export const DEFAULT_PRD_CONFIG: PRDConfig = {
+  level: 'detailed',
+  includeUserStories: true,
+  includeTechArchitecture: true,
+  includeCompetitiveAnalysis: true,
+  includeFinancials: true,
+  includeTimeline: true
+};
+
+/**
+ * Generate a detailed PRD in Markdown format
+ * This is the full, comprehensive version for serious builders
+ */
+export async function generateDetailedPRD(
+  idea: string,
+  name: string,
+  pmfScores: PMFScores,
+  iterations?: Array<{ content: string; dopeLevel: number; feedback: string }>,
+  config: Partial<PRDConfig> = {}
+): Promise<string> {
+  const finalConfig = { ...DEFAULT_PRD_CONFIG, ...config };
+
+  const promptText = GENERATE_DETAILED_PRD_PROMPT(
+    idea,
+    name,
+    pmfScores,
+    iterations
+  );
+
+  const response = await askClaude(promptText, {
+    temperature: 0.7,
+    maxTokens: 8192 // Detailed PRDs need more tokens
+  });
+
+  return response;
+}
+
+/**
+ * Generate a detailed PRD as structured JSON
+ * Useful for programmatic use, storing in database, or further processing
+ */
+export async function generateDetailedPRDJson(
+  idea: string,
+  name: string,
+  pmfScores: PMFScores
+): Promise<DetailedPRD> {
+  const promptText = GENERATE_DETAILED_PRD_JSON_PROMPT(idea, name, pmfScores);
+
+  const response = await askClaude(promptText, {
+    temperature: 0.7,
+    maxTokens: 8192
+  });
+
+  const parsed = parseClaudeJSON<Omit<DetailedPRD, 'generatedAt' | 'level' | 'ideaName' | 'markdown'>>(response);
+
+  // Generate markdown version from the JSON
+  const markdown = convertDetailedPRDToMarkdown(parsed, name, pmfScores);
+
+  return {
+    generatedAt: new Date().toISOString(),
+    level: 'detailed',
+    ideaName: name,
+    ...parsed,
+    markdown
+  };
+}
+
+/**
+ * Convert structured PRD JSON to Markdown
+ */
+function convertDetailedPRDToMarkdown(
+  prd: Omit<DetailedPRD, 'generatedAt' | 'level' | 'ideaName' | 'markdown'>,
+  name: string,
+  pmfScores: PMFScores
+): string {
+  const avgScore = Math.round(
+    (pmfScores.marketSize + pmfScores.problemSeverity + pmfScores.solutionFit +
+     pmfScores.competition + pmfScores.vibeCodeable + pmfScores.virality) / 6
+  );
+
+  return `# ${name} - Product Requirements Document
+
+## Ralph Says
+> ${prd.ralphNotes}
+
+---
+
+## 1. Executive Summary
+
+${prd.executiveSummary}
+
+---
+
+## 2. Problem Statement
+
+### 2.1 Problem Description
+${prd.problemStatement.description}
+
+### 2.2 Pain Points
+${prd.problemStatement.painPoints.map((p, i) => `${i + 1}. ${p}`).join('\n')}
+
+### 2.3 Market Evidence
+${prd.problemStatement.marketEvidence}
+
+---
+
+## 3. Target Users
+
+### 3.1 Primary Persona
+**Name:** ${prd.targetUsers.primaryPersona.name}
+**Role:** ${prd.targetUsers.primaryPersona.role}
+**Demographics:** ${prd.targetUsers.primaryPersona.demographics}
+
+**Goals:**
+${prd.targetUsers.primaryPersona.goals.map(g => `- ${g}`).join('\n')}
+
+**Frustrations:**
+${prd.targetUsers.primaryPersona.frustrations.map(f => `- ${f}`).join('\n')}
+
+**Quote:** "${prd.targetUsers.primaryPersona.quote}"
+
+### 3.2 Secondary Personas
+${prd.targetUsers.secondaryPersonas.map(p => `
+**${p.name}** - ${p.role}
+${p.demographics}
+Goals: ${p.goals.join(', ')}
+`).join('\n')}
+
+---
+
+## 4. User Stories
+
+| ID | Persona | Story | Priority |
+|----|---------|-------|----------|
+${prd.userStories.map(s => `| ${s.id} | ${s.persona} | ${s.story} | ${s.priority} |`).join('\n')}
+
+---
+
+## 5. Solution Overview
+
+${prd.solutionOverview}
+
+---
+
+## 6. Feature Specifications
+
+### 6.1 MVP Features (P0)
+
+${prd.featureSpecs.filter(f => f.mvp).map(f => `
+#### Feature: ${f.name}
+- **Description:** ${f.description}
+- **User Stories:** ${f.userStories.join(', ')}
+- **Acceptance Criteria:**
+${f.acceptanceCriteria.map(c => `  - [ ] ${c}`).join('\n')}
+- **Complexity:** ${f.complexity}
+`).join('\n')}
+
+### 6.2 Post-MVP Features (P1)
+
+${prd.featureSpecs.filter(f => !f.mvp && f.priority === 'P1').map(f => `- **${f.name}:** ${f.description}`).join('\n')}
+
+### 6.3 Future Features (P2)
+
+${prd.featureSpecs.filter(f => f.priority === 'P2').map(f => `- **${f.name}:** ${f.description}`).join('\n')}
+
+---
+
+## 7. Technical Architecture
+
+### 7.1 Overview
+${prd.technicalArchitecture.overview}
+
+### 7.2 Recommended Stack
+${prd.technicalArchitecture.stack.map(s => `- ${s}`).join('\n')}
+
+### 7.3 Data Model
+${prd.technicalArchitecture.dataModel}
+
+### 7.4 API Design
+\`\`\`
+${prd.technicalArchitecture.apiDesign}
+\`\`\`
+
+### 7.5 Infrastructure
+${prd.technicalArchitecture.infrastructure}
+
+---
+
+## 8. UI/UX Guidelines
+
+### 8.1 Design Principles
+${prd.uiUxGuidelines.designPrinciples.map(p => `- ${p}`).join('\n')}
+
+### 8.2 Key Screens
+| Screen | Purpose | Key Elements |
+|--------|---------|--------------|
+${prd.uiUxGuidelines.keyScreens.map(s => `| ${s.name} | ${s.purpose} | ${s.keyElements.join(', ')} |`).join('\n')}
+
+### 8.3 User Flows
+${prd.uiUxGuidelines.userFlows.map((f, i) => `${i + 1}. ${f}`).join('\n')}
+
+---
+
+## 9. Go-to-Market Strategy
+
+### 9.1 Launch Strategy
+${prd.goToMarket.launchStrategy}
+
+### 9.2 Acquisition Channels
+${prd.goToMarket.acquisitionChannels.map(c => `- ${c}`).join('\n')}
+
+### 9.3 Pricing Model
+${prd.goToMarket.pricingModel}
+
+### 9.4 Partnerships
+${prd.goToMarket.partnerships.map(p => `- ${p}`).join('\n')}
+
+---
+
+## 10. Competitive Analysis
+
+### 10.1 Competitor Landscape
+| Competitor | Description | Strengths | Weaknesses | Pricing |
+|------------|-------------|-----------|------------|---------|
+${prd.competitiveAnalysis.competitors.map(c => `| ${c.name} | ${c.description} | ${c.strengths.join(', ')} | ${c.weaknesses.join(', ')} | ${c.pricing} |`).join('\n')}
+
+### 10.2 Our Differentiators
+${prd.competitiveAnalysis.differentiators.map(d => `- ${d}`).join('\n')}
+
+### 10.3 Competitive Moat
+${prd.competitiveAnalysis.moat}
+
+---
+
+## 11. Business Model
+
+### 11.1 Revenue Streams
+${prd.businessModel.revenueStreams.map(r => `- ${r}`).join('\n')}
+
+### 11.2 Unit Economics
+${prd.businessModel.unitEconomics}
+
+### 11.3 Projections
+${prd.businessModel.projections}
+
+---
+
+## 12. Success Metrics
+
+### 12.1 North Star Metric
+**${prd.successMetrics.northStar}**
+
+### 12.2 Key Performance Indicators
+| KPI | Target | Timeframe |
+|-----|--------|-----------|
+${prd.successMetrics.kpis.map(k => `| ${k.name} | ${k.target} | ${k.timeframe} |`).join('\n')}
+
+### 12.3 Milestones
+| Milestone | Description | Target Date |
+|-----------|-------------|-------------|
+${prd.successMetrics.milestones.map(m => `| ${m.name} | ${m.description} | ${m.targetDate} |`).join('\n')}
+
+---
+
+## 13. Development Timeline
+
+${prd.timeline.phases.map(p => `
+### ${p.name} (${p.duration})
+**Objectives:**
+${p.objectives.map(o => `- ${o}`).join('\n')}
+
+**Deliverables:**
+${p.deliverables.map(d => `- ${d}`).join('\n')}
+`).join('\n')}
+
+**Total Estimated Timeline:** ${prd.timeline.totalDuration}
+
+---
+
+## 14. Risks & Mitigations
+
+| Risk | Category | Likelihood | Impact | Mitigation |
+|------|----------|------------|--------|------------|
+${prd.risks.map(r => `| ${r.description} | ${r.category} | ${r.likelihood} | ${r.impact} | ${r.mitigation} |`).join('\n')}
+
+---
+
+## 15. Team Requirements
+
+| Role | Responsibilities | FTE |
+|------|-----------------|-----|
+${prd.teamRequirements.map(t => `| ${t.role} | ${t.responsibilities.join(', ')} | ${t.fullTimeEquivalent} |`).join('\n')}
+
+---
+
+## 16. Budget Estimate
+
+### MVP Budget
+${prd.budgetEstimate.breakdown.map(b => `- ${b}`).join('\n')}
+- **Total MVP:** ${prd.budgetEstimate.mvp}
+
+### Full Product (12 months)
+- **Total:** ${prd.budgetEstimate.fullProduct}
+
+---
+
+## 17. Future Roadmap
+
+${prd.futureRoadmap.map(f => `- ${f}`).join('\n')}
+
+---
+
+## 18. Ralph's Final Wisdom
+
+> ${prd.ralphNotes}
+
+---
+
+*PRD Generated by IdeaRalph | Dope Level: ${avgScore}/10*
+*Generated at: ${new Date().toISOString()}*
+`;
+}
+
+/**
+ * Generate PRD based on level (basic, detailed, or enterprise)
+ */
+export async function generatePRDByLevel(
+  idea: string,
+  name: string,
+  pmfScores: PMFScores,
+  level: PRDLevel = 'basic',
+  iterations?: Array<{ content: string; dopeLevel: number; feedback: string }>
+): Promise<{ markdown: string; json?: DetailedPRD }> {
+  switch (level) {
+    case 'basic':
+      // Use existing basic PRD
+      const basicMarkdown = await generatePRD(idea, name, pmfScores);
+      return { markdown: basicMarkdown };
+
+    case 'detailed':
+      // Generate detailed markdown PRD
+      const detailedMarkdown = await generateDetailedPRD(idea, name, pmfScores, iterations);
+      return { markdown: detailedMarkdown };
+
+    case 'enterprise':
+      // Generate both markdown and structured JSON
+      const enterprisePRD = await generateDetailedPRDJson(idea, name, pmfScores);
+      return { markdown: enterprisePRD.markdown, json: enterprisePRD };
+
+    default:
+      const basicDefault = await generatePRD(idea, name, pmfScores);
+      return { markdown: basicDefault };
+  }
 }

@@ -248,3 +248,95 @@ PUBLIC_APP_URL=http://localhost:5173
 6. **RLS on everything** - Supabase tables MUST have RLS enabled
 7. **No `any` types** - TypeScript strict mode, always
 8. **Server-first** - Use +page.server.ts for sensitive operations
+
+---
+
+## PRD Generation Levels
+
+IdeaRalph supports three PRD (Product Requirements Document) levels:
+
+### Level: `basic` (Default)
+- ~10 sections
+- Quick validation PRD
+- Good for initial idea assessment
+- ~1-2 pages
+
+### Level: `detailed`
+- 18 comprehensive sections
+- 15-20 user stories
+- Full technical architecture
+- Competitive analysis
+- Budget estimates
+- Timeline with phases
+- Risk assessment
+- ~10-15 pages
+
+### Level: `enterprise`
+- Everything in `detailed`
+- Returns both Markdown AND structured JSON
+- JSON is typed with full TypeScript interfaces
+- Ready for database storage or programmatic use
+- Ideal for serious builders
+
+### API Usage
+
+```typescript
+// Basic PRD
+POST /api/prd/generate
+{ idea, name, pmfScores, level: "basic" }
+
+// Detailed PRD
+POST /api/prd/generate
+{ idea, name, pmfScores, level: "detailed" }
+
+// Enterprise PRD (returns markdown + JSON)
+POST /api/prd/generate
+{ idea, name, pmfScores, level: "enterprise" }
+```
+
+### PRD Types (TypeScript)
+
+Key interfaces in `src/lib/ralph/types.ts`:
+- `PRDLevel`: 'basic' | 'detailed' | 'enterprise'
+- `DetailedPRD`: Full structured PRD
+- `UserPersona`: Target user definition
+- `UserStory`: User story with acceptance criteria
+- `FeatureSpec`: Feature specifications
+- `Competitor`: Competitive analysis entry
+- `Risk`: Risk assessment entry
+
+---
+
+## Claude Code Plugin
+
+IdeaRalph can be used as a Claude Code plugin for idea generation directly in your IDE.
+
+### Plugin Commands
+
+```bash
+# Generate idea with Ralph Loop (iterates until dope level 9.9+)
+/ralph-loop "Your idea prompt" --max-iterations 30
+
+# Generate detailed PRD for an existing idea
+/ralph-prd --level detailed
+
+# Quick idea validation
+/ralph-validate "Your idea description"
+```
+
+### Plugin Installation
+
+The plugin lives in `.claude/commands/` and can be installed via:
+
+```bash
+# Copy to your Claude Code commands directory
+cp -r plugins/idearalph ~/.claude/commands/
+```
+
+### Plugin Features
+
+1. **Ralph Loop**: Iterative idea refinement until score threshold
+2. **PMF Scoring**: 10-dimension scoring (now includes problem clarity, uniqueness, feasibility, timing, Ralph Factor)
+3. **PRD Generation**: Basic, Detailed, or Enterprise level
+4. **JSON Output**: Structured data for further processing
+5. **Iteration History**: Track how ideas evolved

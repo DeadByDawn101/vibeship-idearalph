@@ -114,3 +114,161 @@ export const DOPE_LEVELS: Record<number, string> = {
   4: "Gold star material",
   5: "SUPER NINTENDO DOPE"
 };
+
+// PRD Types
+export type PRDLevel = 'basic' | 'detailed' | 'enterprise';
+
+export interface PRDConfig {
+  level: PRDLevel;
+  includeUserStories: boolean;
+  includeTechArchitecture: boolean;
+  includeCompetitiveAnalysis: boolean;
+  includeFinancials: boolean;
+  includeTimeline: boolean;
+}
+
+export interface DetailedPRD {
+  // Meta
+  generatedAt: string;
+  level: PRDLevel;
+  ideaName: string;
+
+  // Content sections
+  executiveSummary: string;
+  problemStatement: {
+    description: string;
+    painPoints: string[];
+    marketEvidence: string;
+  };
+  targetUsers: {
+    primaryPersona: UserPersona;
+    secondaryPersonas: UserPersona[];
+  };
+  userStories: UserStory[];
+  solutionOverview: string;
+  featureSpecs: FeatureSpec[];
+  technicalArchitecture: {
+    overview: string;
+    stack: string[];
+    dataModel: string;
+    apiDesign: string;
+    infrastructure: string;
+  };
+  uiUxGuidelines: {
+    designPrinciples: string[];
+    keyScreens: ScreenSpec[];
+    userFlows: string[];
+  };
+  goToMarket: {
+    launchStrategy: string;
+    acquisitionChannels: string[];
+    pricingModel: string;
+    partnerships: string[];
+  };
+  competitiveAnalysis: {
+    competitors: Competitor[];
+    differentiators: string[];
+    moat: string;
+  };
+  businessModel: {
+    revenueStreams: string[];
+    unitEconomics: string;
+    projections: string;
+  };
+  successMetrics: {
+    northStar: string;
+    kpis: KPI[];
+    milestones: Milestone[];
+  };
+  timeline: {
+    phases: Phase[];
+    totalDuration: string;
+  };
+  risks: Risk[];
+  teamRequirements: TeamRole[];
+  budgetEstimate: {
+    mvp: string;
+    fullProduct: string;
+    breakdown: string[];
+  };
+  futureRoadmap: string[];
+  ralphNotes: string;
+  markdown: string;
+}
+
+export interface UserPersona {
+  name: string;
+  role: string;
+  demographics: string;
+  goals: string[];
+  frustrations: string[];
+  quote: string;
+}
+
+export interface UserStory {
+  id: string;
+  persona: string;
+  story: string;
+  acceptanceCriteria: string[];
+  priority: 'must-have' | 'should-have' | 'nice-to-have';
+}
+
+export interface FeatureSpec {
+  name: string;
+  description: string;
+  userStories: string[];
+  acceptanceCriteria: string[];
+  priority: 'P0' | 'P1' | 'P2';
+  complexity: 'low' | 'medium' | 'high';
+  mvp: boolean;
+}
+
+export interface ScreenSpec {
+  name: string;
+  purpose: string;
+  keyElements: string[];
+  interactions: string[];
+}
+
+export interface Competitor {
+  name: string;
+  description: string;
+  strengths: string[];
+  weaknesses: string[];
+  pricing: string;
+}
+
+export interface KPI {
+  name: string;
+  target: string;
+  timeframe: string;
+}
+
+export interface Milestone {
+  name: string;
+  description: string;
+  deliverables: string[];
+  targetDate: string;
+}
+
+export interface Phase {
+  name: string;
+  duration: string;
+  objectives: string[];
+  deliverables: string[];
+}
+
+export interface Risk {
+  category: 'technical' | 'market' | 'competitive' | 'operational' | 'financial';
+  description: string;
+  likelihood: 'low' | 'medium' | 'high';
+  impact: 'low' | 'medium' | 'high';
+  mitigation: string;
+}
+
+export interface TeamRole {
+  role: string;
+  responsibilities: string[];
+  skills: string[];
+  fullTimeEquivalent: number;
+}

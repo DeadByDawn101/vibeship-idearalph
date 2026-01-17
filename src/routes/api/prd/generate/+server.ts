@@ -1,7 +1,9 @@
 // POST /api/prd/generate - Generate a PRD for an idea
+// Supports three levels: basic, detailed, enterprise
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { generatePRD } from '$lib/ralph/engine';
+import { generatePRD, generatePRDByLevel } from '$lib/ralph/engine';
+import type { PRDLevel } from '$lib/ralph/types';
 import { z } from 'zod';
 
 const PRDSchema = z.object({
@@ -14,7 +16,15 @@ const PRDSchema = z.object({
     competition: z.number().min(0).max(10),
     vibeCodeable: z.number().min(0).max(10),
     virality: z.number().min(0).max(10)
-  })
+  }),
+  // New: PRD level selection
+  level: z.enum(['basic', 'detailed', 'enterprise']).optional().default('basic'),
+  // Optional: iteration history for context
+  iterations: z.array(z.object({
+    content: z.string(),
+    dopeLevel: z.number(),
+    feedback: z.string()
+  })).optional()
 });
 
 export const POST: RequestHandler = async ({ request, locals }) => {
@@ -25,16 +35,24 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
   try {
     const body = await request.json();
-    const { idea, name, pmfScores } = PRDSchema.parse(body);
+    const { idea, name, pmfScores, level, iterations } = PRDSchema.parse(body);
 
-    // Generate PRD
-    const markdown = await generatePRD(idea, name, pmfScores);
+    // Generate PRD based on requested level
+    const result = await generatePRDByLevel(
+      idea,
+      name,
+      pmfScores,
+      level as PRDLevel,
+      iterations
+    );
 
     return json({
       success: true,
       data: {
-        markdown,
+        markdown: result.markdown,
+        json: result.json, // Only present for 'enterprise' level
         name,
+        level,
         generatedAt: new Date().toISOString()
       }
     });
