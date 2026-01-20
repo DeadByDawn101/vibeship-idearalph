@@ -35,12 +35,7 @@ A vibe-coding hackathon in partnership with the Seedify community. Builders use 
 
 ### Community Campaigns (40% of supply)
 
-| Campaign | % of Community Pool | How to Qualify |
-|----------|---------------------|----------------|
-| **MCP Early Adopters** | 30% | Install + use before hackathon ends |
-| **Referral Champions** | 25% | Top referrers on leaderboard |
-| **Social Campaigns** | 25% | Twitter, content creation, engagement |
-| **Project Builders** | 20% | Anyone who submits a hackathon project |
+All community campaigns distributed via X (Twitter) activities, engagement, and social quests.
 
 ---
 
