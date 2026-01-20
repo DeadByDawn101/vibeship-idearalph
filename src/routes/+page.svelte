@@ -516,16 +516,14 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
             <span class="bg-playground-green px-3 py-1.5 rounded-lg text-sm font-bold border-2 border-chalkboard">Checklist</span>
           </div>
 
-          <div class="bg-chalkboard/5 rounded-lg p-3 mb-4 text-center">
-            <p class="text-sm text-chalkboard">
-              Each step scores your idea on <span class="font-bold">10 PMF dimensions</span>
-            </p>
-            <p class="text-xs text-chalkboard/60 mt-1">Ralph keeps iterating until your idea is dope (9.5+)</p>
+          <div class="flex gap-2">
+            <button onclick={() => step = 'install'} class="btn-crayon flex-1 bg-gray-100 text-sm">
+              ← Back
+            </button>
+            <button onclick={() => step = 'tips'} class="btn-crayon flex-1 text-sm">
+              Next →
+            </button>
           </div>
-
-          <button onclick={() => step = 'tips'} class="btn-crayon w-full text-sm">
-            Next: How to Talk to Ralph →
-          </button>
         </div>
 
       {:else if step === 'tips'}
@@ -561,9 +559,14 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
             <p class="text-xs">Ralph works best when you give context. Tell him about your target users, constraints, or what makes you excited!</p>
           </div>
 
-          <button onclick={() => step = 'bell'} class="btn-crayon w-full text-lg">
-            Let's Go!
-          </button>
+          <div class="flex gap-2">
+            <button onclick={() => step = 'flow'} class="btn-crayon flex-1 bg-gray-100 text-sm">
+              ← Back
+            </button>
+            <button onclick={() => step = 'bell'} class="btn-crayon flex-1 text-sm">
+              Let's Go!
+            </button>
+          </div>
         </div>
 
       {:else if step === 'paste'}
