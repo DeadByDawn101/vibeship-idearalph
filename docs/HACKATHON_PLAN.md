@@ -1,13 +1,14 @@
-# IdeaRalph Hackathon: "The Ralph Loop"
+# IdeaRalph x Seedify Hackathon: "The Ralph Loop"
 
 > Launch Date: Tomorrow (with MCP v2.3 release)
 > Duration: 2-3 weeks recommended
+> Community Partner: Seedify
 
 ---
 
 ## Executive Summary
 
-A vibe-coding hackathon where builders use IdeaRalph MCP to go from idea → launched product. Winners get $RALPH tokens. The twist: Ralph scores your idea, and your final product score affects your rewards.
+A vibe-coding hackathon in partnership with the Seedify community. Builders use IdeaRalph MCP to go from idea → launched product. Winners get $RALPH tokens. The twist: Ralph scores your idea, and your final product score affects your rewards.
 
 ---
 
@@ -18,11 +19,11 @@ A vibe-coding hackathon where builders use IdeaRalph MCP to go from idea → lau
 | Category | % | Purpose |
 |----------|---|---------|
 | **Team** | 35% | Core team, vesting over 2 years |
-| **Liquidity** | 8% | DEX liquidity pool |
-| **Hackathon Rewards** | 15% | Prize pool for hackathon winners |
-| **Community Airdrops** | 20% | Early adopters, MCP users, referrers |
-| **Ralph Usage Rewards** | 12% | Ongoing rewards for using Ralph |
-| **Treasury/Future** | 10% | Future initiatives, partnerships |
+| **Liquidity** | 10% | DEX liquidity pool |
+| **Hackathon Prizes** | 15% | Prize pool for hackathon winners |
+| **Community Campaigns** | 40% | Airdrops, campaigns, Seedify community rewards |
+
+**Total: 100%**
 
 ### Hackathon Prize Pool (15% of supply)
 
@@ -32,14 +33,15 @@ A vibe-coding hackathon where builders use IdeaRalph MCP to go from idea → lau
 | **Category Winners** (5) | 8% each = 40% | Best in each category |
 | **Top 20 Finalists** | 2% each = 40% | Completed projects with 9.0+ score |
 
-### Community Airdrop (20% of supply)
+### Community Campaigns (40% of supply)
 
-| Recipient | % of Airdrop Pool | How to Qualify |
-|-----------|-------------------|----------------|
-| **Early MCP Installers** | 30% | Install before hackathon ends |
-| **Top Referrers** | 25% | Leaderboard top 50 |
-| **Project Submitters** | 25% | Anyone who submits a project |
-| **Social Amplifiers** | 20% | Sharing, content creation |
+| Campaign | % of Community Pool | How to Qualify |
+|----------|---------------------|----------------|
+| **Seedify Community** | 30% | Seedify stakers, IGO participants |
+| **MCP Early Adopters** | 20% | Install + use before hackathon ends |
+| **Referral Champions** | 20% | Top referrers on leaderboard |
+| **Social Campaigns** | 15% | Twitter, content creation, engagement |
+| **Project Builders** | 15% | Anyone who submits a hackathon project |
 
 ---
 
