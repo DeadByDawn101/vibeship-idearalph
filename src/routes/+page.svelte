@@ -911,12 +911,17 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
         <div class="bg-paper rounded-xl p-5 border-2 border-chalkboard/20 shadow-crayon">
           <div class="w-10 h-10 text-chalkboard mb-2">
-            <!-- Circular arrows refresh icon - refine -->
-            <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M64,128a96,96,0,0,1,163-68"/>
-              <polyline points="216,40 216,88 168,88"/>
-              <path d="M192,128a96,96,0,0,1-163,68"/>
-              <polyline points="40,216 40,168 88,168"/>
+            <!-- Recycle symbol - three chasing arrows -->
+            <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Arrow 1: top to bottom-right -->
+              <path d="M128,40 L180,120"/>
+              <polyline points="156,84 180,120 144,120"/>
+              <!-- Arrow 2: bottom-right to bottom-left -->
+              <path d="M180,136 L76,136"/>
+              <polyline points="112,112 76,136 112,160"/>
+              <!-- Arrow 3: bottom-left to top -->
+              <path d="M76,120 L128,40"/>
+              <polyline points="92,76 128,40 128,80"/>
             </svg>
           </div>
           <h3 class="font-chalk text-lg text-chalkboard mb-1">Refine</h3>
