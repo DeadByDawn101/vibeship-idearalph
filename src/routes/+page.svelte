@@ -493,12 +493,26 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
           </button>
           <div class="flex items-center gap-2 mb-4">
             <span class="bg-playground-green text-white font-bold rounded-full w-8 h-8 flex items-center justify-center">2</span>
-            <h2 class="font-chalk text-xl text-chalkboard">The Ralph Flow</h2>
+            <h2 class="font-chalk text-xl text-chalkboard">The Ralph Loop</h2>
           </div>
 
-          <p class="text-chalkboard/70 text-sm mb-4">From idea to launch-ready, Ralph guides you through:</p>
+          <!-- Iteration System -->
+          <div class="bg-ralph-yellow rounded-lg p-4 mb-4 border-3 border-chalkboard shadow-crayon">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-white rounded-full border-2 border-chalkboard flex items-center justify-center text-xl">
+                🔄
+              </div>
+              <div>
+                <p class="font-chalk text-lg text-chalkboard">Iterate Until Dope</p>
+                <p class="text-sm text-chalkboard/80">Scores on <span class="font-bold">10 PMF dimensions</span> → refines until <span class="font-bold">9.5+</span></p>
+              </div>
+            </div>
+          </div>
 
-          <div class="flex flex-wrap justify-center gap-2 mb-4">
+          <!-- The Flow -->
+          <p class="text-chalkboard/70 text-sm mb-3">From idea to launch-ready:</p>
+
+          <div class="flex flex-wrap justify-center gap-2 mb-3">
             <span class="bg-ralph-yellow px-3 py-1.5 rounded-lg text-sm font-bold border-2 border-chalkboard">Brainstorm</span>
             <span class="text-chalkboard">→</span>
             <span class="bg-ralph-yellow/70 px-3 py-1.5 rounded-lg text-sm font-bold border-2 border-chalkboard">Validate</span>
@@ -508,7 +522,7 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
             <span class="bg-sky-blue/70 px-3 py-1.5 rounded-lg text-sm font-bold border-2 border-chalkboard">PRD</span>
           </div>
 
-          <div class="flex flex-wrap justify-center gap-2 mb-5">
+          <div class="flex flex-wrap justify-center gap-2 mb-4">
             <span class="bg-purple-300 px-3 py-1.5 rounded-lg text-sm font-bold border-2 border-chalkboard">Design</span>
             <span class="text-chalkboard">→</span>
             <span class="bg-orange-300 px-3 py-1.5 rounded-lg text-sm font-bold border-2 border-chalkboard">Architecture</span>
@@ -540,23 +554,22 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
           <p class="text-chalkboard/70 text-sm mb-4">Just chat naturally. Here's what works:</p>
 
           <div class="space-y-3 mb-4">
-            <div class="bg-ralph-yellow/20 rounded-lg p-3">
+            <div class="bg-ralph-yellow rounded-lg p-3 border-2 border-chalkboard">
               <p class="font-bold text-chalkboard text-sm mb-1">Start with an idea or topic</p>
-              <p class="text-xs text-chalkboard/70 italic">"Brainstorm ideas for a fitness app for busy parents"</p>
+              <p class="text-xs text-chalkboard/80 italic">"Brainstorm ideas for a fitness app for busy parents"</p>
             </div>
-            <div class="bg-playground-green/20 rounded-lg p-3">
+            <div class="bg-playground-green/60 rounded-lg p-3 border-2 border-chalkboard">
               <p class="font-bold text-chalkboard text-sm mb-1">Push for higher scores</p>
-              <p class="text-xs text-chalkboard/70 italic">"Iterate on this until it scores 9.5+"</p>
+              <p class="text-xs text-chalkboard/80 italic">"Iterate on this until it scores 9.5+"</p>
             </div>
-            <div class="bg-sky-blue/20 rounded-lg p-3">
+            <div class="bg-sky-blue/60 rounded-lg p-3 border-2 border-chalkboard">
               <p class="font-bold text-chalkboard text-sm mb-1">Go deeper when ready</p>
-              <p class="text-xs text-chalkboard/70 italic">"Generate a PRD" or "Design the UI" or "Plan the architecture"</p>
+              <p class="text-xs text-chalkboard/80 italic">"Generate a PRD" or "Design the UI" or "Plan the architecture"</p>
             </div>
           </div>
 
           <div class="bg-chalkboard text-white rounded-lg p-3 mb-4">
-            <p class="text-sm font-bold mb-1">Pro tip:</p>
-            <p class="text-xs">Ralph works best when you give context. Tell him about your target users, constraints, or what makes you excited!</p>
+            <p class="text-sm"><span class="font-bold">Pro tip:</span> Just talk to Ralph like you're talking to a friend.</p>
           </div>
 
           <div class="flex gap-2">
