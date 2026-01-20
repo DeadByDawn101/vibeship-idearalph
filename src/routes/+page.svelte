@@ -39,21 +39,6 @@
 
   // UI State
   let step = $state<'bell' | 'install' | 'run' | 'paste' | 'result' | 'prd'>('bell');
-  let hasInstalledPlugin = $state(false);
-
-  // Check if user has done setup before (persisted)
-  $effect(() => {
-    if (typeof window !== 'undefined') {
-      hasInstalledPlugin = localStorage.getItem('idearalph-plugin-installed') === 'true';
-    }
-  });
-
-  function markPluginInstalled() {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('idearalph-plugin-installed', 'true');
-      hasInstalledPlugin = true;
-    }
-  }
   let userHint = $state('');
   let pastedResult = $state('');
   let currentIdea = $state<IdeaResult | null>(null);
@@ -325,8 +310,7 @@ Keep Ralph's voice: "I'm helping!" energy, finds weird connections, says dumb th
 Don't stop until 9.9+ achieved. This may take many iterations.`;
 
   function ringTheBell() {
-    // If they've already installed the plugin, skip to the run step
-    step = hasInstalledPlugin ? 'run' : 'install';
+    step = 'install';
   }
 
   function copyPrompt() {
@@ -496,12 +480,12 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
             MCP = superpowers for Claude. Runs locally, no API key needed.
           </p>
 
-          <button onclick={() => { markPluginInstalled(); step = 'run'; }} class="btn-crayon w-full text-sm">
+          <button onclick={() => step = 'run'} class="btn-crayon w-full text-sm">
             Done, Next →
           </button>
 
           <button
-            onclick={() => { markPluginInstalled(); step = 'run'; }}
+            onclick={() => step = 'run'}
             class="w-full text-chalkboard/50 hover:text-chalkboard text-sm py-2 mt-2"
           >
             I already have it installed →
@@ -542,7 +526,7 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
             </p>
           </div>
 
-          <button onclick={() => { markPluginInstalled(); step = 'bell'; }} class="btn-crayon w-full text-lg">
+          <button onclick={() => step = 'bell'} class="btn-crayon w-full text-lg">
             Got it, let's go!
           </button>
         </div>
