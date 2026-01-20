@@ -18,10 +18,10 @@ A vibe-coding hackathon in partnership with the Seedify community. Builders use 
 
 | Category | % | Purpose |
 |----------|---|---------|
-| **Team** | 35% | Core team, vesting over 2 years |
+| **Seedify** | 35% | Seedify launchpad allocation |
 | **Liquidity** | 10% | DEX liquidity pool |
 | **Hackathon Prizes** | 15% | Prize pool for hackathon winners |
-| **Community Campaigns** | 40% | Airdrops, campaigns, Seedify community rewards |
+| **Community Campaigns** | 40% | Airdrops, referrals, early adopters |
 
 **Total: 100%**
 
@@ -37,11 +37,10 @@ A vibe-coding hackathon in partnership with the Seedify community. Builders use 
 
 | Campaign | % of Community Pool | How to Qualify |
 |----------|---------------------|----------------|
-| **Seedify Community** | 30% | Seedify stakers, IGO participants |
-| **MCP Early Adopters** | 20% | Install + use before hackathon ends |
-| **Referral Champions** | 20% | Top referrers on leaderboard |
-| **Social Campaigns** | 15% | Twitter, content creation, engagement |
-| **Project Builders** | 15% | Anyone who submits a hackathon project |
+| **MCP Early Adopters** | 30% | Install + use before hackathon ends |
+| **Referral Champions** | 25% | Top referrers on leaderboard |
+| **Social Campaigns** | 25% | Twitter, content creation, engagement |
+| **Project Builders** | 20% | Anyone who submits a hackathon project |
 
 ---
 
