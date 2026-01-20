@@ -434,7 +434,10 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
       {:else if step === 'setup'}
         <!-- Setup: First time user - explain the process -->
-        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-lg">
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-lg relative">
+          <button onclick={() => step = 'bell'} class="absolute -top-3 -right-3 w-9 h-9 flex items-center justify-center rounded-full border-4 border-chalkboard bg-white hover:bg-gray-100 text-chalkboard text-2xl font-bold shadow-lg transition-all z-10">
+            <span class="-mt-0.5">&times;</span>
+          </button>
           <h2 class="font-chalk text-2xl text-chalkboard mb-2">Welcome to IdeaRalph!</h2>
           <p class="text-chalkboard/70 text-sm mb-4">First time? Let's set you up in 1 minute.</p>
 
@@ -469,7 +472,10 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
       {:else if step === 'install'}
         <!-- Step 1: Install the MCP -->
-        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-lg">
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-lg relative">
+          <button onclick={() => step = 'bell'} class="absolute -top-3 -right-3 w-9 h-9 flex items-center justify-center rounded-full border-4 border-chalkboard bg-white hover:bg-gray-100 text-chalkboard text-2xl font-bold shadow-lg transition-all z-10">
+            <span class="-mt-0.5">&times;</span>
+          </button>
           <div class="flex items-center gap-2 mb-4">
             <span class="bg-ralph-yellow text-chalkboard font-bold rounded-full w-8 h-8 flex items-center justify-center">1</span>
             <h2 class="font-chalk text-xl text-chalkboard">Add the IdeaRalph MCP</h2>
@@ -534,7 +540,10 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
       {:else if step === 'run'}
         <!-- Step 2: How to Use -->
-        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-lg">
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-lg relative">
+          <button onclick={() => step = 'bell'} class="absolute -top-3 -right-3 w-9 h-9 flex items-center justify-center rounded-full border-4 border-chalkboard bg-white hover:bg-gray-100 text-chalkboard text-2xl font-bold shadow-lg transition-all z-10">
+            <span class="-mt-0.5">&times;</span>
+          </button>
           <div class="flex items-center gap-2 mb-4">
             <span class="bg-playground-green text-white font-bold rounded-full w-8 h-8 flex items-center justify-center">2</span>
             <h2 class="font-chalk text-xl text-chalkboard">Just Talk to Claude!</h2>
@@ -576,7 +585,10 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
       {:else if step === 'paste'}
         <!-- Step 3: Paste the result -->
-        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-lg">
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-lg relative">
+          <button onclick={() => step = 'bell'} class="absolute -top-3 -right-3 w-9 h-9 flex items-center justify-center rounded-full border-4 border-chalkboard bg-white hover:bg-gray-100 text-chalkboard text-2xl font-bold shadow-lg transition-all z-10">
+            <span class="-mt-0.5">&times;</span>
+          </button>
           <div class="flex items-center gap-2 mb-4">
             <span class="bg-sky-blue text-white font-bold rounded-full w-8 h-8 flex items-center justify-center">3</span>
             <h2 class="font-chalk text-xl text-chalkboard">Paste the Result</h2>
@@ -606,7 +618,10 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
       {:else if step === 'result' && currentIdea}
         <!-- Step 3: Display the result with PMF Analysis -->
-        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-2xl mx-auto">
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-2xl mx-auto relative">
+          <button onclick={startOver} class="absolute -top-3 -right-3 w-9 h-9 flex items-center justify-center rounded-full border-4 border-chalkboard bg-white hover:bg-gray-100 text-chalkboard text-2xl font-bold shadow-lg transition-all z-10">
+            <span class="-mt-0.5">&times;</span>
+          </button>
           <div class="text-left">
             <!-- Header with name and total score -->
             <div class="flex items-start justify-between mb-2">
@@ -682,7 +697,10 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
       {:else if step === 'prd' && currentIdea}
         <!-- PRD View -->
-        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-2xl mx-auto">
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-4 border-chalkboard shadow-crayon-lg max-w-2xl mx-auto relative">
+          <button onclick={startOver} class="absolute -top-3 -right-3 w-9 h-9 flex items-center justify-center rounded-full border-4 border-chalkboard bg-white hover:bg-gray-100 text-chalkboard text-2xl font-bold shadow-lg transition-all z-10">
+            <span class="-mt-0.5">&times;</span>
+          </button>
           <div class="flex items-center justify-between mb-4">
             <h2 class="font-chalk text-2xl text-chalkboard">PRD: {currentIdea.name}</h2>
             <div class="font-chalk text-xl {getScoreColor(currentIdea.totalScore)}">
