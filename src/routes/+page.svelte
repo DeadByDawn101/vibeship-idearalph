@@ -911,12 +911,14 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
         <div class="bg-paper rounded-xl p-5 border-2 border-chalkboard/20 shadow-crayon">
           <div class="w-10 h-10 text-chalkboard mb-2">
-            <!-- Spiral up icon - refine/iterate -->
+            <!-- Recycle/refresh icon - refine -->
             <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M128,224 A72,72,0,1,1,200,152"/>
-              <path d="M128,176 A48,48,0,1,1,176,128"/>
-              <path d="M128,128 A24,24,0,1,1,152,104"/>
-              <polyline points="152,56 152,104 200,104"/>
+              <path d="M176,56 A96,96,0,0,1,224,128"/>
+              <polyline points="224,56 224,104 176,104"/>
+              <path d="M80,200 A96,96,0,0,1,32,128"/>
+              <polyline points="32,200 32,152 80,152"/>
+              <path d="M168,200 A96,96,0,0,1,80,200"/>
+              <path d="M88,56 A96,96,0,0,1,176,56"/>
             </svg>
           </div>
           <h3 class="font-chalk text-lg text-chalkboard mb-1">Refine</h3>
@@ -941,13 +943,11 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
 
         <div class="bg-paper rounded-xl p-5 border-2 border-chalkboard/20 shadow-crayon">
           <div class="w-10 h-10 text-chalkboard mb-2">
-            <!-- Blueprint/layers icon - architecture -->
+            <!-- Database/stack icon - architecture -->
             <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="48" y="48" width="160" height="160" rx="8"/>
-              <line x1="48" y1="104" x2="208" y2="104"/>
-              <line x1="48" y1="160" x2="208" y2="160"/>
-              <line x1="104" y1="104" x2="104" y2="208"/>
-              <circle cx="76" cy="76" r="8" fill="currentColor"/>
+              <ellipse cx="128" cy="64" rx="80" ry="32"/>
+              <path d="M48,64 v128 c0,17.67,35.82,32,80,32 s80-14.33,80-32 V64"/>
+              <path d="M48,128 c0,17.67,35.82,32,80,32 s80-14.33,80-32"/>
             </svg>
           </div>
           <h3 class="font-chalk text-lg text-chalkboard mb-1">Architecture</h3>
