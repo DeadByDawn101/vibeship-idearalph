@@ -462,9 +462,9 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
               copied = true;
               setTimeout(() => copied = false, 2000);
             }}
-            class="btn-crayon w-full text-sm mb-3"
+            class="btn-crayon w-full text-sm mb-3 {copied ? 'bg-playground-green' : ''}"
           >
-            {copied ? 'Copied!' : 'Copy Command'}
+            {copied ? '✓ Copied!' : 'Copy Command'}
           </button>
 
           <div class="bg-ralph-yellow border-2 border-chalkboard rounded-lg p-4 mb-4">
