@@ -359,15 +359,23 @@
       <!-- Token Distribution -->
       <div class="mt-12 bg-white/5 rounded-2xl p-8 border border-white/10">
         <h3 class="text-white font-semibold mb-6 text-center">Token Distribution</h3>
-        <!-- Bar only -->
-        <div class="flex h-4 rounded-lg overflow-hidden mb-4">
-          <div class="bg-[#8B7BF7]" style="width: 35%"></div>
-          <div class="bg-[#8B7BF7]/60" style="width: 30%"></div>
-          <div class="bg-[#8B7BF7]/40" style="width: 25%"></div>
-          <div class="bg-[#8B7BF7]/20" style="width: 10%"></div>
+        <!-- Bar with labels inside on desktop -->
+        <div class="flex h-6 md:h-10 rounded-lg overflow-hidden mb-4">
+          <div class="bg-[#8B7BF7] flex items-center justify-center" style="width: 35%">
+            <span class="hidden md:block text-white text-xs font-medium">SFUND Stakers 35%</span>
+          </div>
+          <div class="bg-[#8B7BF7]/60 flex items-center justify-center" style="width: 30%">
+            <span class="hidden md:block text-white text-xs font-medium">X Community 30%</span>
+          </div>
+          <div class="bg-[#8B7BF7]/40 flex items-center justify-center" style="width: 25%">
+            <span class="hidden md:block text-white/90 text-xs font-medium">Vibe Coders 25%</span>
+          </div>
+          <div class="bg-[#8B7BF7]/20 flex items-center justify-center" style="width: 10%">
+            <span class="hidden md:block text-white/80 text-xs font-medium">Liq 10%</span>
+          </div>
         </div>
-        <!-- Labels underneath - centered -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <!-- Labels underneath - mobile only -->
+        <div class="grid grid-cols-2 gap-3 md:hidden">
           <span class="text-white/80 text-xs text-center">SFUND Stakers 35%</span>
           <span class="text-white/80 text-xs text-center">X Community 30%</span>
           <span class="text-white/80 text-xs text-center">Vibe Coders 25%</span>
