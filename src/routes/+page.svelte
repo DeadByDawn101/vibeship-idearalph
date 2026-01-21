@@ -427,7 +427,7 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
           <span>Unleash Ralph</span>
         </button>
         <div class="mt-3 inline-block bg-white/60 px-3 py-1 rounded-xl border border-chalkboard/20">
-          <span class="text-chalkboard text-xs">Powered by your Claude Code • No API costs</span>
+          <span class="text-chalkboard text-xs">Powered by MCPs • No API cost</span>
         </div>
 
         {#if savedIdeas.length > 0}
