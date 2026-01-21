@@ -1,25 +1,68 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-
-  // Countdown state
-  let days = $state(0);
-  let hours = $state(0);
-  let minutes = $state(0);
-  let seconds = $state(0);
-
-  // Set hackathon end date (2 weeks from now - adjust as needed)
-  const endDate = new Date();
-  endDate.setDate(endDate.getDate() + 14);
-
-  // Stats (will be dynamic later)
-  let builders = $state(0);
-  let projects = $state(0);
-
-  // Copy state
-  let copied = $state(false);
-
   // FAQ state
   let openFaq = $state<number | null>(null);
+  let copied = $state(false);
+
+  // Terminal animation state
+  let showLine1 = $state(false);
+  let showLine2 = $state(false);
+  let showCommand = $state(false);
+  let typedCommand = $state('');
+  let showOutput = $state(false);
+  let typedSpwn = $state('');
+  let typedVibecoins = $state('');
+  let showCursor = $state(false);
+  let animationComplete = $state(false);
+
+  const commandText = 'hackathon';
+  const spwnText = '/spwn';
+  const vibecoinsText = 'VIBECOINS';
+
+  // Typing effect helper
+  function typeText(text: string, setter: (val: string) => void, speed: number = 80): Promise<void> {
+    return new Promise((resolve) => {
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          setter(text.slice(0, i + 1));
+          i++;
+        } else {
+          clearInterval(interval);
+          resolve();
+        }
+      }, speed);
+    });
+  }
+
+  // Run animation sequence on mount
+  $effect(() => {
+    if (animationComplete) return;
+
+    const runAnimation = async () => {
+      await new Promise(r => setTimeout(r, 500)); // Initial delay
+
+      showLine1 = true;
+      await new Promise(r => setTimeout(r, 300));
+
+      showLine2 = true;
+      await new Promise(r => setTimeout(r, 200));
+
+      showCommand = true;
+      await typeText(commandText, (val) => typedCommand = val, 100);
+      await new Promise(r => setTimeout(r, 400));
+
+      showOutput = true;
+      await typeText(spwnText, (val) => typedSpwn = val, 120);
+      await new Promise(r => setTimeout(r, 150));
+      await typeText(vibecoinsText, (val) => typedVibecoins = val, 80);
+      await new Promise(r => setTimeout(r, 300));
+
+      showCursor = true;
+      animationComplete = true;
+    };
+
+    runAnimation();
+  });
 
   const faqs = [
     {
@@ -28,179 +71,106 @@
     },
     {
       q: "How does the launchpad work?",
-      a: "Build your app → Create hype on X → Get users → List on vibe/vibe to raise. Two paths: Community Launch (open to all) or Seedify Curated (higher raises for top projects)."
+      a: "Build → Grow → Launch on vibe/vibe. Three paths: Community Voted (open to all), Curated (higher raises), or Degen (bonding curve, instant launch). Plus you earn creator fees from trading volume."
     },
     {
       q: "Is there a deadline?",
-      a: "No! This is a continuous hackathon. Build at your pace. Raise when you're ready. No waiting for results."
+      a: "No! This is a continuous hackathon. Build at your pace. Launch when you're ready."
     },
     {
-      q: "Can existing projects join?",
-      a: "Yes! If you already have a vibe-coded app with traction, you can list on vibe/vibe when it launches."
-    },
-    {
-      q: "How do I get $RALPH tokens?",
-      a: "Multiple ways: participate in the hackathon, launch on vibe/vibe, get strong usage metrics, or get selected for Seedify curation."
-    },
-    {
-      q: "What's the difference between Community and Curated?",
-      a: "Community Launch is open to everyone who ships. Seedify Curated is for projects with exceptional traction - they get higher raise caps and bonus token allocations."
-    },
-    {
-      q: "Do I need to pay anything?",
-      a: "No. The MCP is free. Claude Code has a free tier. Everything runs locally. The launchpad will have standard Seedify terms."
+      q: "How do I earn tokens?",
+      a: "Use IdeaRalph as an MCP to earn a portion. But the biggest allocation goes to vibe coders who actually ship apps. Builders who ship get the most."
     }
   ];
-
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const distance = endDate.getTime() - now;
-
-    if (distance > 0) {
-      days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    }
-  }
-
-  function copyCommand() {
-    const command = 'git clone https://github.com/vibeforge1111/vibeship-idearalph.git ~/idearalph && cd ~/idearalph/mcp-server && npm i && npm run build && claude mcp add idearalph -- node ~/idearalph/mcp-server/dist/index.js';
-    navigator.clipboard.writeText(command);
-    copied = true;
-    setTimeout(() => copied = false, 2000);
-  }
 
   function toggleFaq(index: number) {
     openFaq = openFaq === index ? null : index;
   }
 
-  onMount(() => {
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  });
+  function copyCommand() {
+    navigator.clipboard.writeText('git clone https://github.com/vibeforge1111/vibeship-idearalph.git ~/idearalph && cd ~/idearalph/mcp-server && npm i && npm run build && claude mcp add idearalph -- node ~/idearalph/mcp-server/dist/index.js');
+    copied = true;
+    setTimeout(() => copied = false, 2000);
+  }
 </script>
 
 <svelte:head>
-  <title>Vibecode: Build → Hype → Raise | IdeaRalph x Seedify</title>
-  <meta name="description" content="The first launchpad for vibe-coded apps. Build with AI, create hype on X, raise on vibe/vibe. If you can ship, you're eligible." />
+  <title>/spwn VIBECOINS | IdeaRalph x vibe/vibe</title>
+  <meta name="description" content="Launchpad for vibe coders, vibecoins, and those who wanna bet on vibecoins. Build with AI, grow your audience, launch on vibe/vibe." />
 </svelte:head>
 
 <main class="bg-playground-sunset overflow-hidden">
-  <!-- Hero Section with Video Background -->
-  <section class="relative min-h-screen flex items-center justify-center px-4 py-16 overflow-hidden">
-    <!-- Video Background -->
-    <div class="absolute inset-0 z-0">
-      <video
-        autoplay
-        loop
-        muted
-        playsinline
-        preload="auto"
-        disablepictureinpicture
-        class="w-full h-full object-cover"
-      >
-        <source src="/videos/hackathon-hero.mp4" type="video/mp4" />
-      </video>
-      <!-- Gradient overlay for readability -->
-      <div class="absolute inset-0 bg-gradient-to-b from-chalkboard/60 via-chalkboard/40 to-chalkboard/70"></div>
-    </div>
-
-    <!-- Content -->
-    <div class="relative z-10 max-w-4xl mx-auto text-center">
-      <!-- Logos -->
-      <div class="flex items-center justify-center gap-4 mb-8">
-        <div class="flex items-center gap-2 bg-white/90 px-4 py-2 rounded-xl border-3 border-chalkboard shadow-crayon">
-          <img src="/images/ralph-logo.png" alt="IdeaRalph" class="w-8 h-8 rounded-full" />
-          <span class="font-chalk text-chalkboard">IdeaRalph</span>
+  <!-- Hero Section (Terminal Style) -->
+  <section class="relative py-8 px-4">
+    <div class="max-w-2xl mx-auto">
+      <!-- Terminal Window -->
+      <div class="bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#333]">
+        <!-- Terminal Header -->
+        <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-[#333]">
+          <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+          <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+          <div class="w-3 h-3 rounded-full bg-[#27ca40]"></div>
+          <span class="ml-2 text-white/40 text-xs font-mono">claude-code</span>
         </div>
-        <span class="text-2xl text-white">×</span>
-        <div class="flex items-center gap-2 bg-white/90 px-4 py-2 rounded-xl border-3 border-chalkboard shadow-crayon">
-          <span class="font-chalk text-chalkboard">Seedify</span>
+
+        <!-- Terminal Content -->
+        <div class="p-6 font-mono min-h-[180px]">
+          <!-- Logos row -->
+          {#if showLine1}
+            <div class="flex items-center gap-2 mb-4 text-white/50 text-sm animate-fade-in">
+              <span class="text-[#27ca40]">~</span>
+              <span>IdeaRalph × vibe/vibe</span>
+            </div>
+          {/if}
+
+          <!-- Command -->
+          {#if showLine2}
+            <div class="flex items-center gap-2 mb-2 animate-fade-in">
+              <span class="text-[#27ca40]">$</span>
+              {#if showCommand}
+                <span class="text-white/60 text-sm">{typedCommand}<span class="inline-block w-2 h-4 bg-white/70 ml-0.5 animate-pulse" class:hidden={typedCommand === commandText}></span></span>
+              {/if}
+            </div>
+          {/if}
+
+          <!-- Output - Campaign Name -->
+          {#if showOutput}
+            <div class="pl-4 animate-fade-in flex items-center">
+              <span class="text-[#ffbd2e] text-3xl md:text-4xl font-bold tracking-wide">{typedSpwn}</span>
+              {#if typedVibecoins}
+                <span class="text-white text-3xl md:text-4xl font-bold tracking-wide ml-2">{typedVibecoins}</span>
+              {/if}
+              {#if typedVibecoins !== vibecoinsText}
+                <span class="w-3 h-8 bg-white/70 ml-1 animate-pulse"></span>
+              {:else if showCursor}
+                <span class="w-3 h-8 bg-white/70 ml-1 animate-blink"></span>
+              {/if}
+            </div>
+          {/if}
         </div>
       </div>
-
-      <!-- Title -->
-      <h1 class="font-chalk text-5xl md:text-7xl lg:text-8xl text-white mb-4 leading-tight drop-shadow-lg">
-        VIBECODE
-      </h1>
-      <p class="font-chalk text-2xl md:text-3xl text-ralph-yellow mb-6 drop-shadow-md">
-        Build → Hype → Raise
-      </p>
-
-      <!-- Tagline -->
-      <p class="text-xl md:text-2xl text-white/90 mb-4 max-w-2xl mx-auto drop-shadow">
-        The first launchpad for <span class="font-bold text-ralph-yellow">vibe-coded</span> apps.
-      </p>
-      <p class="text-lg text-white/70 mb-10 max-w-xl mx-auto drop-shadow">
-        If you can ship, you're eligible. No gatekeeping.
-      </p>
-
-      <!-- Countdown -->
-      <div class="flex items-center justify-center gap-3 md:gap-4 mb-10">
-        <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon px-4 py-3 md:px-6 md:py-4 min-w-[70px] md:min-w-[90px]">
-          <div class="font-chalk text-3xl md:text-4xl text-chalkboard">{days}</div>
-          <div class="text-xs md:text-sm text-chalkboard/60">days</div>
-        </div>
-        <span class="font-chalk text-2xl text-chalkboard/40">:</span>
-        <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon px-4 py-3 md:px-6 md:py-4 min-w-[70px] md:min-w-[90px]">
-          <div class="font-chalk text-3xl md:text-4xl text-chalkboard">{hours.toString().padStart(2, '0')}</div>
-          <div class="text-xs md:text-sm text-chalkboard/60">hours</div>
-        </div>
-        <span class="font-chalk text-2xl text-chalkboard/40">:</span>
-        <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon px-4 py-3 md:px-6 md:py-4 min-w-[70px] md:min-w-[90px]">
-          <div class="font-chalk text-3xl md:text-4xl text-chalkboard">{minutes.toString().padStart(2, '0')}</div>
-          <div class="text-xs md:text-sm text-chalkboard/60">mins</div>
-        </div>
-        <span class="font-chalk text-2xl text-chalkboard/40">:</span>
-        <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon px-4 py-3 md:px-6 md:py-4 min-w-[70px] md:min-w-[90px]">
-          <div class="font-chalk text-3xl md:text-4xl text-chalkboard">{seconds.toString().padStart(2, '0')}</div>
-          <div class="text-xs md:text-sm text-chalkboard/60">secs</div>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="flex items-center justify-center gap-4 md:gap-6 mb-10">
-        <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon px-5 py-3">
-          <div class="font-chalk text-2xl text-playground-green">15%</div>
-          <div class="text-xs text-chalkboard/70">$RALPH Prize Pool</div>
-        </div>
-        <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon px-5 py-3">
-          <div class="font-chalk text-2xl text-chalkboard">{builders}</div>
-          <div class="text-xs text-chalkboard/70">Builders</div>
-        </div>
-        <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon px-5 py-3">
-          <div class="font-chalk text-2xl text-chalkboard">{projects}</div>
-          <div class="text-xs text-chalkboard/70">Projects</div>
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <a href="#how-to-enter" class="btn-crayon text-xl px-10 py-5 inline-flex items-center gap-3 animate-pulse-subtle">
-        <span>Start Building Now</span>
-        <span class="text-2xl">🛠️</span>
-      </a>
     </div>
   </section>
 
-  <!-- The Flow Section -->
-  <section class="bg-paper py-16 md:py-24 px-4">
+  <!-- The Flow Section (Original Style) -->
+  <section class="bg-paper py-16 px-4">
     <div class="max-w-4xl mx-auto">
-      <!-- Quote -->
       <div class="flex justify-center mb-10">
         <div class="thought-bubble bg-white px-8 py-4">
           <p class="ralph-voice text-xl md:text-2xl text-chalkboard text-center">
-            "90% of hackathon projects die after demo day. Not anymore."
+            "Build → Grow → Launch"
           </p>
         </div>
       </div>
 
-      <!-- 4 Step Flow: Build → Hype → Usage → Raise -->
+      <!-- 3 Step Flow -->
       <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-10">
         <div class="flex flex-col items-center text-center">
           <div class="w-16 h-16 bg-ralph-yellow rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
-            <span class="text-2xl">🛠️</span>
+            <!-- Build icon - hammer -->
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
           </div>
           <span class="font-chalk text-lg">Build</span>
           <span class="text-xs text-chalkboard/60">Vibe code your app</span>
@@ -209,307 +179,219 @@
         <span class="text-2xl text-chalkboard/30 md:hidden rotate-90">→</span>
         <div class="flex flex-col items-center text-center">
           <div class="w-16 h-16 bg-playground-green rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
-            <span class="text-2xl">📣</span>
+            <!-- Grow icon - sprout -->
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 20h10"/>
+              <path d="M12 20v-8"/>
+              <path d="M12 12c-2-2-5-2.5-5 0 0 3 5 3 5 0"/>
+              <path d="M12 12c2-2 5-2.5 5 0 0 3-5 3-5 0"/>
+              <path d="M12 8V4"/>
+              <circle cx="12" cy="4" r="1" fill="currentColor"/>
+            </svg>
           </div>
-          <span class="font-chalk text-lg">Hype</span>
-          <span class="text-xs text-chalkboard/60">Create buzz on X</span>
-        </div>
-        <span class="text-2xl text-chalkboard/30 hidden md:block">→</span>
-        <span class="text-2xl text-chalkboard/30 md:hidden rotate-90">→</span>
-        <div class="flex flex-col items-center text-center">
-          <div class="w-16 h-16 bg-sky-blue rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
-            <span class="text-2xl">📊</span>
-          </div>
-          <span class="font-chalk text-lg">Usage</span>
-          <span class="text-xs text-chalkboard/60">Get people using it</span>
+          <span class="font-chalk text-lg">Grow</span>
+          <span class="text-xs text-chalkboard/60">Build your audience</span>
         </div>
         <span class="text-2xl text-chalkboard/30 hidden md:block">→</span>
         <span class="text-2xl text-chalkboard/30 md:hidden rotate-90">→</span>
         <div class="flex flex-col items-center text-center">
           <div class="w-16 h-16 bg-purple-400 rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
-            <span class="text-2xl">💰</span>
+            <!-- Launch icon - rocket -->
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+            </svg>
           </div>
-          <span class="font-chalk text-lg">Raise</span>
-          <span class="text-xs text-chalkboard/60">Launch on vibe/vibe</span>
+          <span class="font-chalk text-lg">Launch</span>
+          <span class="text-xs text-chalkboard/60">On vibe/vibe</span>
         </div>
       </div>
 
-      <!-- Description -->
-      <p class="text-center text-chalkboard/70 text-lg max-w-2xl mx-auto mb-6">
-        Build with AI (Claude Code, Cursor, Copilot). Create traction on X. Raise on <span class="font-bold">vibe/vibe</span> launchpad.
-      </p>
       <p class="text-center text-chalkboard font-bold text-xl">
-        No deadline. No limits. If you ship, you can raise.
+        No deadline. No limits. If you ship, you can launch.
       </p>
     </div>
   </section>
 
-  <!-- vibe/vibe Launchpad Teaser -->
-  <section class="bg-gradient-to-b from-purple-500 to-purple-700 py-16 md:py-20 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <div class="inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-        <span class="text-white font-bold text-sm">🚀 COMING IN DAYS</span>
-      </div>
-
-      <h2 class="font-chalk text-4xl md:text-5xl text-white mb-4">
-        vibe/vibe Launchpad
-      </h2>
-      <p class="text-xl text-white/80 mb-8 max-w-xl mx-auto">
-        The first launchpad built for vibe coders. Powered by Seedify.
-      </p>
-
-      <!-- Two Paths -->
-      <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-8">
-        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-          <div class="text-3xl mb-3">🌐</div>
-          <h3 class="font-chalk text-xl text-white mb-2">Community Launch</h3>
-          <p class="text-white/70 text-sm mb-3">Ship an app + have X traction</p>
-          <div class="text-white/50 text-xs">Open to everyone who builds</div>
-        </div>
-
-        <div class="bg-ralph-yellow/20 backdrop-blur-sm rounded-xl p-6 border border-ralph-yellow/40">
-          <div class="text-3xl mb-3">👑</div>
-          <h3 class="font-chalk text-xl text-ralph-yellow mb-2">Seedify Curated</h3>
-          <p class="text-white/70 text-sm mb-3">Strong traction → higher raise</p>
-          <div class="text-ralph-yellow/70 text-xs">+ Bonus $RALPH allocation</div>
-        </div>
-      </div>
-
-      <p class="text-white/60 text-sm max-w-lg mx-auto">
-        Start building NOW. The launchpad drops soon. A significant portion of <span class="text-ralph-yellow font-bold">$RALPH</span> tokens goes to projects that launch on vibe/vibe.
-      </p>
-    </div>
-  </section>
-
-  <!-- Prize Categories Section -->
-  <section class="bg-chalkboard py-16 md:py-24 px-4">
+  <!-- ============================================== -->
+  <!-- vibe/vibe vibecoin launchpad Section -->
+  <!-- ============================================== -->
+  <section id="launchpad" class="bg-[#0a0a0f] py-20 px-4">
     <div class="max-w-5xl mx-auto">
-      <h2 class="font-chalk text-3xl md:text-4xl text-ralph-yellow text-center mb-4">
-        🏆 Earn $RALPH Tokens
-      </h2>
-      <p class="text-center text-white/60 mb-12">Multiple ways to earn while you build</p>
+      <!-- Floating cubes background -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-12 h-12 border border-purple-500/20 rotate-12"></div>
+        <div class="absolute bottom-20 right-10 w-8 h-8 border border-purple-500/30 -rotate-12"></div>
+      </div>
 
-      <!-- Category Grid -->
-      <div class="grid md:grid-cols-2 gap-6 mb-8">
-        <!-- Stupid Smart -->
-        <div class="bg-paper rounded-xl p-6 border-3 border-chalkboard shadow-crayon transition-transform hover:rotate-1 hover:-translate-y-1">
-          <div class="text-3xl mb-3">🤪</div>
-          <h3 class="font-chalk text-xl text-chalkboard mb-2">Stupid Smart</h3>
-          <p class="text-chalkboard/70 text-sm mb-4">Most Ralph energy. Sounds dumb at first, but is actually genius.</p>
-          <div class="inline-block bg-ralph-yellow/30 px-3 py-1 rounded-lg">
-            <span class="font-bold text-chalkboard text-sm">8% of pool</span>
+      <div class="relative z-10 text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+          vibe/vibe vibecoin launchpad
+        </h2>
+        <p class="text-lg text-white/50 max-w-2xl mx-auto">
+          Launchpad built for vibe coders, vibecoins, and those who wanna bet on vibecoins.
+        </p>
+      </div>
+
+      <!-- Three Paths -->
+      <div class="relative z-10 grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
+        <div class="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 transition-all">
+          <div class="w-12 h-12 mb-4">
+            <!-- Vote/Poll icon - checkmark in box -->
+            <svg class="w-full h-full text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M9 12l2 2 4-4"/>
+              <path d="M3 15h18"/>
+              <path d="M7 19h2"/>
+              <path d="M15 19h2"/>
+            </svg>
           </div>
+          <h3 class="text-xl font-bold text-white mb-2">Community Voted</h3>
+          <p class="text-white/50 mb-4 text-sm">Ship an app + grow traction → community votes</p>
+          <div class="text-white/30 text-sm">Open to everyone who builds</div>
         </div>
 
-        <!-- Speed Run -->
-        <div class="bg-paper rounded-xl p-6 border-3 border-chalkboard shadow-crayon transition-transform hover:-rotate-1 hover:-translate-y-1">
-          <div class="text-3xl mb-3">⚡</div>
-          <h3 class="font-chalk text-xl text-chalkboard mb-2">Speed Run</h3>
-          <p class="text-chalkboard/70 text-sm mb-4">Fastest from idea to deployed product. Show your velocity.</p>
-          <div class="inline-block bg-sky-blue/30 px-3 py-1 rounded-lg">
-            <span class="font-bold text-chalkboard text-sm">8% of pool</span>
+        <div class="bg-[#8B7BF7]/10 rounded-2xl p-6 border border-[#8B7BF7]/30 hover:border-[#8B7BF7]/50 transition-all">
+          <div class="w-12 h-12 mb-4">
+            <!-- Crown icon -->
+            <svg class="w-full h-full text-[#8B7BF7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 17L12 22L22 17"/>
+              <path d="M2 12L12 17L22 12"/>
+              <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+            </svg>
           </div>
+          <h3 class="text-xl font-bold text-[#8B7BF7] mb-2">Curated</h3>
+          <p class="text-white/50 mb-4 text-sm">Strong traction → selected for higher raise</p>
+          <div class="text-[#8B7BF7]/70 text-sm">+ Bonus token allocation</div>
         </div>
 
-        <!-- Loop Master -->
-        <div class="bg-paper rounded-xl p-6 border-3 border-chalkboard shadow-crayon transition-transform hover:rotate-1 hover:-translate-y-1">
-          <div class="text-3xl mb-3">🔄</div>
-          <h3 class="font-chalk text-xl text-chalkboard mb-2">Loop Master</h3>
-          <p class="text-chalkboard/70 text-sm mb-4">Highest PMF score achieved. Show the iteration journey.</p>
-          <div class="inline-block bg-playground-green/30 px-3 py-1 rounded-lg">
-            <span class="font-bold text-chalkboard text-sm">8% of pool</span>
+        <div class="bg-emerald-600/10 rounded-2xl p-6 border border-emerald-600/30 hover:border-emerald-600/50 transition-all">
+          <div class="w-12 h-12 mb-4">
+            <!-- Degen - lightning bolt / zap icon -->
+            <svg class="w-full h-full text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
           </div>
-        </div>
-
-        <!-- Vibe Ship -->
-        <div class="bg-paper rounded-xl p-6 border-3 border-chalkboard shadow-crayon transition-transform hover:-rotate-1 hover:-translate-y-1">
-          <div class="text-3xl mb-3">🚀</div>
-          <h3 class="font-chalk text-xl text-chalkboard mb-2">Vibe Ship</h3>
-          <p class="text-chalkboard/70 text-sm mb-4">Best use of SvelteKit + Supabase + Spawner stack.</p>
-          <div class="inline-block bg-purple-300/50 px-3 py-1 rounded-lg">
-            <span class="font-bold text-chalkboard text-sm">8% of pool</span>
-          </div>
+          <h3 class="text-xl font-bold text-emerald-500 mb-2">Degen</h3>
+          <p class="text-white/50 mb-4 text-sm">No raise needed → straight launch via bonding curve</p>
+          <div class="text-emerald-500/70 text-sm">Instant liquidity</div>
         </div>
       </div>
 
-      <!-- Community Choice - Full Width -->
-      <div class="bg-paper rounded-xl p-6 border-3 border-chalkboard shadow-crayon mb-8 transition-transform hover:rotate-1 hover:-translate-y-1">
-        <div class="flex items-center gap-4">
-          <div class="text-4xl">❤️</div>
-          <div class="flex-1">
-            <h3 class="font-chalk text-xl text-chalkboard mb-1">Community Choice</h3>
-            <p class="text-chalkboard/70 text-sm">Most voted by the community. Build something people love to share.</p>
-          </div>
-          <div class="bg-playground-sunset/30 px-4 py-2 rounded-lg">
-            <span class="font-bold text-chalkboard">8% of pool</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Grand Prize -->
-      <div class="bg-ralph-yellow rounded-xl p-8 border-4 border-chalkboard shadow-crayon-lg text-center">
-        <div class="text-5xl mb-4">👑</div>
-        <h3 class="font-chalk text-2xl md:text-3xl text-chalkboard mb-2">Grand Prize</h3>
-        <p class="text-chalkboard/70 mb-4">Best overall project across all dimensions</p>
-        <div class="inline-block bg-white px-6 py-3 rounded-xl border-2 border-chalkboard">
-          <span class="font-chalk text-2xl text-chalkboard">20% of prize pool</span>
-        </div>
+      <!-- Creator fees note -->
+      <div class="relative z-10 text-center">
+        <p class="text-[#8B7BF7] text-sm font-medium">
+          💰 All vibe coders earn creator fees from trading volume
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- The Ralph Loop Section -->
-  <section class="bg-white py-16 md:py-24 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-chalk text-3xl md:text-4xl text-chalkboard text-center mb-4">
-        🔄 The Ralph Loop
-      </h2>
-      <p class="text-center text-chalkboard/60 mb-12 max-w-xl mx-auto">
-        Ralph iterates on your idea until it scores 9.5+ on 10 PMF dimensions. Then guides you to launch.
-      </p>
+  <!-- ============================================== -->
+  <!-- Earn Tokens Section (SEEDIFY STYLE) -->
+  <!-- ============================================== -->
+  <section class="bg-[#0a0a0f] py-20 px-4 border-t border-white/5">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+          Earn <span class="text-[#8B7BF7]">$???</span> Tokens
+        </h2>
+        <p class="text-lg text-white/50">
+          Token name revealed soon. Multiple ways to earn.
+        </p>
+      </div>
 
-      <!-- Flow Visualization -->
-      <div class="bg-paper rounded-2xl border-3 border-chalkboard shadow-crayon p-8 mb-8">
-        <!-- Top Row: Brainstorm → Validate → Iterate (with loop) -->
-        <div class="flex flex-wrap items-center justify-center gap-3 mb-6">
-          <span class="bg-ralph-yellow px-4 py-2 rounded-lg text-sm font-bold border-2 border-chalkboard">Brainstorm</span>
-          <span class="text-chalkboard">→</span>
-          <span class="bg-ralph-yellow/70 px-4 py-2 rounded-lg text-sm font-bold border-2 border-chalkboard">Validate</span>
-          <span class="text-chalkboard">→</span>
-          <div class="flex items-center gap-2">
-            <span class="bg-playground-green px-4 py-2 rounded-lg text-sm font-bold border-2 border-chalkboard">Iterate</span>
-            <span class="text-xs text-chalkboard/60">↺ until 9.5+</span>
+      <!-- Earnings Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-purple-500/30 transition-all">
+          <div class="w-8 h-8 mb-3">
+            <!-- Plug icon -->
+            <svg class="w-full h-full text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22v-5"/>
+              <path d="M9 8V2"/>
+              <path d="M15 8V2"/>
+              <path d="M18 8v5a6 6 0 0 1-6 6a6 6 0 0 1-6-6V8Z"/>
+            </svg>
           </div>
+          <h3 class="text-white font-semibold mb-2">Use MCP</h3>
+          <p class="text-white/40 text-sm">Use IdeaRalph as an MCP to earn a portion of tokens</p>
         </div>
 
-        <!-- Arrow down -->
-        <div class="text-center text-2xl text-chalkboard/40 mb-6">↓</div>
+        <div class="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-purple-500/30 transition-all">
+          <div class="w-8 h-8 mb-3">
+            <!-- Build icon -->
+            <svg class="w-full h-full text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+          </div>
+          <h3 class="text-white font-semibold mb-2">Build & Ship</h3>
+          <p class="text-white/40 text-sm">Vibe coders who ship apps get the biggest allocation</p>
+        </div>
 
-        <!-- Bottom Row: PRD → Design → Architecture → Checklist → Ship -->
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <span class="bg-sky-blue/70 px-4 py-2 rounded-lg text-sm font-bold border-2 border-chalkboard">PRD</span>
-          <span class="text-chalkboard">→</span>
-          <span class="bg-purple-300 px-4 py-2 rounded-lg text-sm font-bold border-2 border-chalkboard">Design</span>
-          <span class="text-chalkboard">→</span>
-          <span class="bg-orange-300 px-4 py-2 rounded-lg text-sm font-bold border-2 border-chalkboard">Architecture</span>
-          <span class="text-chalkboard">→</span>
-          <span class="bg-playground-green px-4 py-2 rounded-lg text-sm font-bold border-2 border-chalkboard">Checklist</span>
-          <span class="text-chalkboard">→</span>
-          <span class="bg-chalkboard text-white px-4 py-2 rounded-lg text-sm font-bold border-2 border-chalkboard">🚀 Ship!</span>
+        <div class="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-purple-500/30 transition-all">
+          <div class="w-8 h-8 mb-3">
+            <!-- Rocket icon -->
+            <svg class="w-full h-full text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+            </svg>
+          </div>
+          <h3 class="text-white font-semibold mb-2">Launch</h3>
+          <p class="text-white/40 text-sm">Launch on vibe/vibe for bonus allocation</p>
+        </div>
+
+        <div class="bg-[#8B7BF7]/10 rounded-xl p-6 border border-[#8B7BF7]/30">
+          <div class="w-8 h-8 mb-3">
+            <!-- Dollar/percentage icon -->
+            <svg class="w-full h-full text-[#8B7BF7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="2" x2="12" y2="22"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h3 class="text-[#8B7BF7] font-semibold mb-2">Creator Fees</h3>
+          <p class="text-white/40 text-sm">Earn from trading volume on your vibecoin</p>
         </div>
       </div>
 
-      <!-- PMF Dimensions -->
-      <div class="text-center">
-        <p class="text-sm text-chalkboard/60 mb-3">Scored on 10 PMF dimensions:</p>
-        <div class="flex flex-wrap justify-center gap-2">
-          {#each ['Problem', 'Market', 'Unique', 'Feasible', 'Revenue', 'Timing', 'Viral', 'Moat', 'Team Fit', 'Ralph Factor'] as dim}
-            <span class="bg-chalkboard/10 px-2 py-1 rounded text-xs text-chalkboard/70">{dim}</span>
-          {/each}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Tokenomics Section -->
-  <section class="bg-paper py-16 md:py-24 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-chalk text-3xl md:text-4xl text-chalkboard text-center mb-4">
-        💰 $RALPH Tokenomics
-      </h2>
-      <p class="text-center text-chalkboard/60 mb-10">
-        No team allocation. Fair launch.
-      </p>
-
-      <!-- Token Bar -->
-      <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon p-6 mb-8">
-        <div class="flex h-12 rounded-lg overflow-hidden border-2 border-chalkboard">
-          <div class="bg-sky-blue flex items-center justify-center text-white text-xs font-bold" style="width: 35%">
-            Seedify 35%
+      <!-- Token Distribution -->
+      <div class="mt-12 bg-white/5 rounded-2xl p-8 border border-white/10">
+        <h3 class="text-white font-semibold mb-6 text-center">Token Distribution</h3>
+        <div class="flex h-8 rounded-lg overflow-hidden mb-4">
+          <div class="bg-[#8B7BF7] flex items-center justify-center text-white text-xs font-medium" style="width: 35%">
+            SFUND Stakers 35%
           </div>
-          <div class="bg-playground-green flex items-center justify-center text-white text-xs font-bold" style="width: 40%">
-            Community 40%
+          <div class="bg-[#8B7BF7]/60 flex items-center justify-center text-white text-xs font-medium" style="width: 30%">
+            X Community 30%
           </div>
-          <div class="bg-ralph-yellow flex items-center justify-center text-chalkboard text-xs font-bold" style="width: 15%">
-            Hack 15%
+          <div class="bg-[#8B7BF7]/40 flex items-center justify-center text-white text-xs font-medium" style="width: 25%">
+            Vibe Coders 25%
           </div>
-          <div class="bg-purple-400 flex items-center justify-center text-white text-xs font-bold" style="width: 10%">
+          <div class="bg-[#8B7BF7]/20 flex items-center justify-center text-white text-xs font-medium" style="width: 10%">
             Liq 10%
           </div>
         </div>
-      </div>
-
-      <!-- Token Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-sky-blue/20 rounded-xl p-4 border-2 border-chalkboard/20 text-center">
-          <div class="font-chalk text-2xl text-chalkboard">35%</div>
-          <div class="text-sm text-chalkboard/70">Seedify</div>
-        </div>
-        <div class="bg-playground-green/20 rounded-xl p-4 border-2 border-chalkboard/20 text-center">
-          <div class="font-chalk text-2xl text-chalkboard">40%</div>
-          <div class="text-sm text-chalkboard/70">Community (X)</div>
-        </div>
-        <div class="bg-ralph-yellow/30 rounded-xl p-4 border-2 border-chalkboard/20 text-center">
-          <div class="font-chalk text-2xl text-chalkboard">15%</div>
-          <div class="text-sm text-chalkboard/70">Hackathon</div>
-        </div>
-        <div class="bg-purple-300/30 rounded-xl p-4 border-2 border-chalkboard/20 text-center">
-          <div class="font-chalk text-2xl text-chalkboard">10%</div>
-          <div class="text-sm text-chalkboard/70">Liquidity</div>
-        </div>
+        <p class="text-white/30 text-sm text-center">No team allocation. Fair launch. Builders who ship get the most.</p>
       </div>
     </div>
   </section>
 
-  <!-- How to Enter Section -->
-  <section id="how-to-enter" class="bg-gradient-to-b from-playground-green/20 to-white py-16 md:py-24 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-chalk text-3xl md:text-4xl text-chalkboard text-center mb-4">
+  <!-- Get Started Section (Original Style) -->
+  <section id="get-started" class="bg-gradient-to-b from-playground-green/20 to-white py-16 px-4">
+    <div class="max-w-2xl mx-auto text-center">
+      <h2 class="font-chalk text-3xl md:text-4xl text-chalkboard mb-4">
         🚀 Start Building Now
       </h2>
-      <p class="text-center text-chalkboard/60 mb-12">Get ready for the vibe/vibe launchpad</p>
-
-      <!-- 4 Steps -->
-      <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-12">
-        <div class="flex flex-col items-center text-center">
-          <div class="w-14 h-14 bg-ralph-yellow rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-3">
-            <span class="font-chalk text-xl">1</span>
-          </div>
-          <span class="font-chalk text-lg text-chalkboard">Install MCP</span>
-          <span class="text-sm text-chalkboard/60">Get Ralph powers</span>
-        </div>
-        <span class="text-3xl text-chalkboard/30 hidden md:block">→</span>
-        <span class="text-3xl text-chalkboard/30 md:hidden rotate-90">→</span>
-        <div class="flex flex-col items-center text-center">
-          <div class="w-14 h-14 bg-playground-green rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-3">
-            <span class="font-chalk text-xl text-white">2</span>
-          </div>
-          <span class="font-chalk text-lg text-chalkboard">Build Your App</span>
-          <span class="text-sm text-chalkboard/60">Vibe code it</span>
-        </div>
-        <span class="text-3xl text-chalkboard/30 hidden md:block">→</span>
-        <span class="text-3xl text-chalkboard/30 md:hidden rotate-90">→</span>
-        <div class="flex flex-col items-center text-center">
-          <div class="w-14 h-14 bg-sky-blue rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-3">
-            <span class="font-chalk text-xl text-white">3</span>
-          </div>
-          <span class="font-chalk text-lg text-chalkboard">Hype on X</span>
-          <span class="text-sm text-chalkboard/60">Build traction</span>
-        </div>
-        <span class="text-3xl text-chalkboard/30 hidden md:block">→</span>
-        <span class="text-3xl text-chalkboard/30 md:hidden rotate-90">→</span>
-        <div class="flex flex-col items-center text-center">
-          <div class="w-14 h-14 bg-purple-400 rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-3">
-            <span class="font-chalk text-xl text-white">4</span>
-          </div>
-          <span class="font-chalk text-lg text-chalkboard">Raise</span>
-          <span class="text-sm text-chalkboard/60">On vibe/vibe</span>
-        </div>
-      </div>
+      <p class="text-chalkboard/60 mb-8">
+        Install the IdeaRalph MCP and start vibe coding
+      </p>
 
       <!-- Install Command -->
-      <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon p-6 max-w-2xl mx-auto mb-8">
-        <p class="text-sm text-chalkboard/70 mb-3">Install command:</p>
+      <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon p-6 mb-8 text-left">
+        <p class="text-sm text-chalkboard/70 mb-3">One command to install:</p>
         <div class="bg-chalkboard rounded-lg p-4 mb-4">
           <code class="text-xs text-playground-green font-mono break-all leading-relaxed block">
             git clone https://github.com/vibeforge1111/vibeship-idearalph.git ~/idearalph && cd ~/idearalph/mcp-server && npm i && npm run build && claude mcp add idearalph -- node ~/idearalph/mcp-server/dist/index.js
@@ -523,17 +405,16 @@
         </button>
       </div>
 
-      <!-- Restart Note -->
-      <p class="text-center text-chalkboard/60 text-sm">
-        Then restart Claude: <code class="bg-chalkboard/10 px-2 py-1 rounded">/exit</code> → <code class="bg-chalkboard/10 px-2 py-1 rounded">claude</code>
+      <p class="text-chalkboard/60 text-sm">
+        Then restart Claude: <code class="bg-chalkboard/10 px-2 py-1 rounded">exit</code> → <code class="bg-chalkboard/10 px-2 py-1 rounded">claude</code>
       </p>
     </div>
   </section>
 
-  <!-- FAQ Section -->
-  <section class="bg-white py-16 md:py-24 px-4">
+  <!-- FAQ Section (Original Style) -->
+  <section class="bg-white py-16 px-4">
     <div class="max-w-2xl mx-auto">
-      <h2 class="font-chalk text-3xl md:text-4xl text-chalkboard text-center mb-12">
+      <h2 class="font-chalk text-3xl text-chalkboard text-center mb-12">
         ❓ FAQ
       </h2>
 
@@ -558,53 +439,81 @@
     </div>
   </section>
 
-  <!-- Final CTA Section -->
-  <section class="bg-chalkboard py-16 md:py-24 px-4">
-    <div class="max-w-3xl mx-auto text-center">
-      <p class="text-white/80 text-lg md:text-xl mb-6 italic">
-        "The future of startups is one person with Claude Code, an idea that sounds stupid, and the audacity to ship and raise."
-      </p>
-
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-        <a href="#how-to-enter" class="btn-crayon text-lg px-8 py-3">
-          🛠️ Start Building Now
-        </a>
-        <a href="/docs/MANIFESTO.md" class="text-white/70 hover:text-white underline">
-          Read the Manifesto →
-        </a>
-      </div>
-
-      <!-- Launchpad coming soon reminder -->
-      <div class="bg-purple-500/20 border border-purple-400/30 rounded-xl p-4 mb-8 max-w-md mx-auto">
-        <p class="text-purple-300 text-sm">
-          <span class="font-bold">vibe/vibe launchpad</span> drops in days. Build now, raise soon.
+  <!-- Footer -->
+  <footer class="bg-paper py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+      <!-- Quote -->
+      <div class="text-center pb-6 mb-6 border-b border-chalkboard/10">
+        <p class="text-chalkboard/60 text-sm ralph-voice">
+          "The future of startups is one person with Claude Code and the audacity to ship."
         </p>
       </div>
 
-      <!-- Vibeship Branding -->
-      <div class="flex items-center justify-center gap-2 text-white/50">
-        <span class="text-sm">Powered by</span>
-        <a href="https://vibeship.co" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 hover:text-white/70 transition-colors">
-          <img
-            src="https://raw.githubusercontent.com/vibeforge1111/vibeship-spawner/main/web/static/logo.png"
-            alt="Vibeship"
-            class="w-5 h-5 opacity-60"
-            style="filter: grayscale(100%) brightness(2);"
-          />
-          <span class="font-semibold">vibeship</span>
-        </a>
+      <!-- Branding & Links -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <!-- Left: vibe/vibe + Legal -->
+        <div class="flex flex-col md:flex-row items-center gap-4">
+          <a href="/" class="font-chalk text-chalkboard hover:text-chalkboard/70 transition-colors">
+            vibe/vibe
+          </a>
+          <div class="flex items-center gap-2 text-xs text-chalkboard/40">
+            <a href="/" class="hover:text-chalkboard/70 transition-colors">Home</a>
+            <span>·</span>
+            <a href="/terms" class="hover:text-chalkboard/70 transition-colors">Terms</a>
+            <span>·</span>
+            <a href="/privacy" class="hover:text-chalkboard/70 transition-colors">Privacy</a>
+          </div>
+        </div>
+
+        <!-- Right: Tagline + Vibeship -->
+        <div class="flex items-center gap-3">
+          <span class="text-chalkboard/50 text-sm">Vibe coded. For vibe coders.</span>
+          <a
+            href="https://vibeship.co"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex items-center gap-1 text-chalkboard/70 hover:text-chalkboard transition-colors"
+          >
+            <img
+              src="https://raw.githubusercontent.com/vibeforge1111/vibeship-spawner/main/web/static/logo.png"
+              alt="Vibeship"
+              class="w-6 h-6 opacity-70 group-hover:opacity-100 transition-opacity"
+              style="filter: grayscale(100%) brightness(0.3);"
+            />
+            <span class="font-body text-sm font-semibold tracking-tight">vibeship</span>
+          </a>
+        </div>
       </div>
     </div>
-  </section>
+  </footer>
 </main>
 
 <style>
-  @keyframes pulse-subtle {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .animate-pulse-subtle {
-    animation: pulse-subtle 2s ease-in-out infinite;
+  @keyframes blink {
+    0%, 50% {
+      opacity: 1;
+    }
+    51%, 100% {
+      opacity: 0;
+    }
+  }
+
+  :global(.animate-fade-in) {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  :global(.animate-blink) {
+    animation: blink 1s step-end infinite;
   }
 </style>
