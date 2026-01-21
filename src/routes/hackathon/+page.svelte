@@ -438,9 +438,12 @@
         </button>
       </div>
 
-      <p class="text-chalkboard/60 text-sm">
-        Then restart Claude: <code class="bg-chalkboard/10 px-2 py-1 rounded">exit</code> → <code class="bg-chalkboard/10 px-2 py-1 rounded">claude</code>
-      </p>
+      <p class="text-chalkboard/60 text-sm mb-3">Then restart Claude:</p>
+      <div class="flex items-center justify-center gap-3">
+        <code class="bg-white px-3 py-1.5 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:rotate-1 cursor-pointer">exit</code>
+        <span class="bg-white px-2 py-1 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:rotate-2 cursor-pointer">→</span>
+        <code class="bg-white px-3 py-1.5 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:-rotate-1 cursor-pointer">claude</code>
+      </div>
     </div>
   </section>
 
