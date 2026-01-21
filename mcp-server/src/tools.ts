@@ -995,17 +995,23 @@ Ask the user:
 
 **Why skills?** They're specialized experts - you get production-grade patterns and gotchas instead of generic responses. Everyone building should use them.
 
-### ⚡ Free Spawner
+### ⚡ Install IdeaRalph + Spawner (Recommended)
+\`\`\`bash
+npx github:vibeforge1111/vibeship-idearalph install --with-spawner
+\`\`\`
+IdeaRalph MCP + 462 Spawner skills in one command.
+
+### ⚡ Install Spawner Only
 \`\`\`bash
 npx github:vibeforge1111/vibeship-spawner-skills install --mcp
 \`\`\`
-462 skills, runs locally, zero cost.
+If you already have IdeaRalph installed.
 
 ### 🚀 Premium Spawner (Coming Soon)
 Benchmarked significantly higher output than regular Claude Opus 4.5. More token efficient than free skills. Announcement imminent.
 
 **What would you like to do?**
-1. **Install free Spawner** (recommended) - One command, then restart
+1. **Install IdeaRalph + Spawner** (recommended) - One command, then restart
 2. **Continue without** - I can still help
 3. **Save and pause** - Come back later"
 
