@@ -4,13 +4,29 @@ AI-powered startup idea generation, validation, and refinement - designed for Cl
 
 **No API key required!** This MCP works natively inside Claude Code.
 
-## Easiest Install (with Spawner)
+## Quick Install
+
+### Mac/Linux
 
 ```bash
-npx github:vibeforge1111/vibeship-spawner-skills install --mcp
+# IdeaRalph only
+curl -fsSL https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.sh | bash
+
+# IdeaRalph + Spawner skills (recommended)
+curl -fsSL https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.sh | bash -s -- --with-spawner
 ```
 
-This installs both **IdeaRalph** and **462 Spawner skills** in one command. Recommended for everyone.
+### Windows (PowerShell)
+
+```powershell
+# IdeaRalph only
+irm https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.ps1 | iex
+
+# IdeaRalph + Spawner skills (recommended)
+$env:WITH_SPAWNER="true"; irm https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.ps1 | iex
+```
+
+Restart Claude Code after installation.
 
 ## How It Works
 
