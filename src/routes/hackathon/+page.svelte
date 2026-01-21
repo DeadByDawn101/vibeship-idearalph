@@ -88,7 +88,7 @@
   }
 
   function copyCommand() {
-    navigator.clipboard.writeText('curl -fsSL https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.sh | bash -s -- --with-spawner');
+    navigator.clipboard.writeText('npx idearalph install --with-spawner');
     copied = true;
     setTimeout(() => copied = false, 2000);
   }
@@ -391,10 +391,10 @@
 
       <!-- Install Command -->
       <div class="bg-white rounded-xl border-3 border-chalkboard shadow-crayon p-6 mb-8 text-left">
-        <p class="text-sm text-chalkboard/70 mb-3">One command to install (Mac/Linux):</p>
+        <p class="text-sm text-chalkboard/70 mb-3">One command to install:</p>
         <div class="bg-chalkboard rounded-lg p-4 mb-4">
-          <code class="text-sm text-playground-green font-mono break-all leading-relaxed block">
-            curl -fsSL https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.sh | bash -s -- --with-spawner
+          <code class="text-lg text-playground-green font-mono block">
+            npx idearalph install --with-spawner
           </code>
         </div>
         <button
@@ -403,7 +403,6 @@
         >
           {copied ? '✓ Copied!' : 'Copy Command'}
         </button>
-        <p class="text-xs text-chalkboard/50 mt-3">Windows? Use PowerShell: <code class="bg-chalkboard/10 px-1 rounded">irm ...install.ps1 | iex</code></p>
       </div>
 
       <p class="text-chalkboard/60 text-sm">

@@ -6,27 +6,15 @@ AI-powered startup idea generation, validation, and refinement - designed for Cl
 
 ## Quick Install
 
-### Mac/Linux
-
 ```bash
 # IdeaRalph only
-curl -fsSL https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.sh | bash
+npx idearalph install
 
 # IdeaRalph + Spawner skills (recommended)
-curl -fsSL https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.sh | bash -s -- --with-spawner
+npx idearalph install --with-spawner
 ```
 
-### Windows (PowerShell)
-
-```powershell
-# IdeaRalph only
-irm https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.ps1 | iex
-
-# IdeaRalph + Spawner skills (recommended)
-$env:WITH_SPAWNER="true"; irm https://raw.githubusercontent.com/vibeforge1111/vibeship-idearalph/main/install.ps1 | iex
-```
-
-Restart Claude Code after installation.
+Works on Mac, Linux, and Windows. Restart Claude Code after installation.
 
 ## How It Works
 
