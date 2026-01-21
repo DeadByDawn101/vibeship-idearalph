@@ -1,12 +1,20 @@
-# IdeaRalph MCP Server v2.0
+# IdeaRalph MCP Server v2.2
 
 AI-powered startup idea generation, validation, and refinement - designed for Claude Code.
 
 **No API key required!** This MCP works natively inside Claude Code.
 
+## Easiest Install (with Spawner)
+
+```bash
+npx github:vibeforge1111/vibeship-spawner-skills install --mcp
+```
+
+This installs both **IdeaRalph** and **462 Spawner skills** in one command. Recommended for everyone.
+
 ## How It Works
 
-Unlike traditional MCPs that make external API calls, IdeaRalph v2.0 is a **prompt provider**. It returns structured prompts and scoring criteria that Claude (already running in Claude Code) processes directly.
+Unlike traditional MCPs that make external API calls, IdeaRalph is a **prompt provider**. It returns structured prompts and scoring criteria that Claude (already running in Claude Code) processes directly.
 
 ```
 Old way:  User → Claude Code → MCP → Anthropic API → Response (needed API key!)
@@ -27,21 +35,27 @@ This means:
 | `idearalph_validate` | Validate and score an existing startup idea on 10 PMF dimensions |
 | `idearalph_refine` | Run the Ralph Loop to iteratively improve an idea until target score |
 | `idearalph_prd` | Generate a PRD at 3 levels: napkin, science-fair, genius |
+| `idearalph_design` | Design UI/UX with ONE question - infers audience, finds references |
 | `idearalph_architecture` | Get implementation plan with recommended Spawner skills |
+| `idearalph_checklist` | Generate YC-level Tasks.md + Checklist.md for launch |
 
 ## The Flow
 
 ```
-Brainstorm → Validate → Refine → PRD → Architecture → Build with Spawner!
+Brainstorm → Validate → Refine → PRD → Design → Architecture → Checklist → Build!
 ```
 
 1. **Brainstorm**: Generate ideas in a domain
 2. **Validate**: Score on 10 PMF dimensions
 3. **Refine**: Iterate until score >= 9.5 (or your target)
 4. **PRD**: Generate documentation (napkin → science-fair → genius)
-5. **Architecture**: Get tech stack and Spawner skills for building
+5. **Design**: ONE question ("What vibe?") → full design spec
+6. **Architecture**: Get tech stack and Spawner skills for building
+7. **Checklist**: YC-level launch checklist (security, legal, growth)
 
-## Installation
+## Standalone Installation
+
+If you only want IdeaRalph (without Spawner skills):
 
 ### Prerequisites
 - Node.js 18+
