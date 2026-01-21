@@ -2,8 +2,6 @@
 
 **Your AI co-founder for startup ideas.** Ralph takes your rough concepts and refines them until they're investor-ready.
 
-> "Ralph has the energy of a caffeinated golden retriever who LOVES helping founders succeed."
-
 ## What Does Ralph Do?
 
 1. **Scores your ideas** on 10 Product-Market Fit dimensions
