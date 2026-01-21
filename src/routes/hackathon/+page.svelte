@@ -299,10 +299,15 @@
       </div>
 
       <!-- Creator fees note -->
-      <div class="relative z-10 text-center">
-        <p class="text-[#8B7BF7] text-sm font-medium">
-          💰 All vibe coders earn creator fees from trading volume
-        </p>
+      <div class="relative z-10 flex justify-center">
+        <div class="inline-flex items-center gap-3 bg-white/10 px-6 py-3 rounded-xl border border-white/20">
+          <svg class="w-6 h-6 text-[#8B7BF7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v12"/>
+            <path d="M15 9.5c0-1.5-1.5-2.5-3-2.5s-3 1-3 2.5 1.5 2.5 3 2.5 3 1 3 2.5-1.5 2.5-3 2.5"/>
+          </svg>
+          <span class="text-white font-medium">All vibe coders earn creator fees from trading volume</span>
+        </div>
       </div>
     </div>
   </section>
