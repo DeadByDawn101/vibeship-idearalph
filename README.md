@@ -23,7 +23,8 @@ npx github:vibeforge1111/vibeship-idearalph install
 
 Then restart Claude Code:
 ```
-exit → claude
+/exit
+claude
 ```
 
 That's it! Start brainstorming.
