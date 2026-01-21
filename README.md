@@ -96,6 +96,14 @@ premium biomes ($2.99) and meditation coach subs ($4.99/mo)."
 Brainstorm → Validate → Refine → PRD → Design → Architecture → Build!
 ```
 
+1. **Brainstorm** — Give Ralph a topic, get startup ideas with initial scores
+2. **Validate** — Score your idea on 10 PMF dimensions (problem clarity, market size, etc.)
+3. **Refine** — Ralph Loop iterates until your idea hits 9.5+ (or run single/max mode)
+4. **PRD** — Generate a Product Requirements Doc (napkin, science-fair, or genius level)
+5. **Design** — One question: "What vibe?" Ralph infers audience and creates design specs
+6. **Architecture** — Get implementation plan with recommended tech stack
+7. **Build!** — Start shipping with Spawner skills or your own setup
+
 ## /spwn VIBECOINS
 
 Building something cool? Launch it on the **vibe/vibe vibecoin launchpad**.
