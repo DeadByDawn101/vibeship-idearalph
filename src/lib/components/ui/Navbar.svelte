@@ -31,9 +31,9 @@
       <!-- /spwn VIBECOINS Button -->
       <a
         href="/hackathon"
-        class="bg-ralph-yellow hover:bg-ralph-yellow/80 text-chalkboard font-chalk px-4 py-2 rounded-xl border-2 border-chalkboard shadow-crayon transition-all hover:scale-105 flex items-center gap-2"
+        class="btn-crayon px-3 py-2 text-sm sm:text-base flex items-center gap-1"
       >
-        <span class="text-sm sm:text-base">/spwn</span>
+        <span>/spwn</span>
         <span class="hidden sm:inline font-bold">VIBECOINS</span>
       </a>
     </div>
