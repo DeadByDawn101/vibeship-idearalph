@@ -211,6 +211,11 @@
           <span class="text-xs text-chalkboard/60">On vibe/vibe</span>
         </button>
       </div>
+
+      <!-- MCP Note -->
+      <p class="text-center text-chalkboard/50 text-sm">
+        Get the MCP install command from the <a href="/#unleash-ralph" class="underline hover:text-chalkboard transition-colors">Unleash Ralph</a> button on the home page
+      </p>
     </div>
   </section>
 
