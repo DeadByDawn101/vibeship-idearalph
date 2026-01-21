@@ -345,10 +345,15 @@
 
         <div class="bg-[#8B7BF7]/10 rounded-xl p-6 border border-[#8B7BF7]/30">
           <div class="w-8 h-8 mb-3">
-            <!-- Dollar/percentage icon -->
+            <!-- Money bag icon -->
             <svg class="w-full h-full text-[#8B7BF7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="2" x2="12" y2="22"/>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              <!-- Bag body -->
+              <path d="M12 22c5 0 8-3.5 8-9 0-4-2-6-4-7l-1-3H9L8 6c-2 1-4 3-4 7 0 5.5 3 9 8 9z"/>
+              <!-- Bag tie/knot -->
+              <path d="M9 3c0 0 1.5 1 3 1s3-1 3-1"/>
+              <!-- Dollar sign inside -->
+              <path d="M12 10v6"/>
+              <path d="M14 11.5c0-.8-.9-1.5-2-1.5s-2 .7-2 1.5.9 1.5 2 1.5 2 .7 2 1.5-.9 1.5-2 1.5"/>
             </svg>
           </div>
           <h3 class="text-[#8B7BF7] font-semibold mb-2">Creator Fees</h3>
