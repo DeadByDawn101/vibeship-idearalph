@@ -49,6 +49,9 @@
   let prdContent = $state('');
   let prdCopied = $state(false);
 
+  // Install mode: 'cli' for Claude Code, 'desktop' for Claude Desktop
+  let installMode = $state<'cli' | 'desktop'>('cli');
+
   // Load saved ideas from localStorage on mount
   $effect(() => {
     if (typeof window !== 'undefined') {
@@ -450,48 +453,79 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
             <h2 class="font-chalk text-xl text-chalkboard">Add the IdeaRalph MCP</h2>
           </div>
 
-          <p class="text-chalkboard/70 text-sm mb-3">IdeaRalph + Spawner skills (recommended):</p>
-
-          <div class="bg-chalkboard rounded-lg p-3 mb-2">
-            <code class="block text-sm text-playground-green font-mono">npx github:vibeforge1111/vibeship-idearalph install --with-spawner</code>
+          <!-- Install Mode Toggle -->
+          <div class="flex justify-center gap-2 mb-4">
+            <button
+              onclick={() => installMode = 'cli'}
+              class="px-3 py-1.5 rounded-lg font-chalk text-xs border-2 transition-all duration-150 {installMode === 'cli' ? 'bg-chalkboard text-white border-chalkboard' : 'bg-white text-chalkboard border-chalkboard/30 hover:border-chalkboard'}"
+            >
+              Claude Code (CLI)
+            </button>
+            <button
+              onclick={() => installMode = 'desktop'}
+              class="px-3 py-1.5 rounded-lg font-chalk text-xs border-2 transition-all duration-150 {installMode === 'desktop' ? 'bg-chalkboard text-white border-chalkboard' : 'bg-white text-chalkboard border-chalkboard/30 hover:border-chalkboard'}"
+            >
+              Claude Desktop
+            </button>
           </div>
 
-          <button
-            onclick={() => {
-              navigator.clipboard.writeText('npx github:vibeforge1111/vibeship-idearalph install --with-spawner');
-              copied = true;
-              setTimeout(() => copied = false, 2000);
-            }}
-            class="btn-crayon w-full text-sm mb-4 {copied ? 'bg-playground-green' : ''}"
-          >
-            {copied ? '✓ Copied!' : 'Copy Command'}
-          </button>
+          {#if installMode === 'cli'}
+            <p class="text-chalkboard/70 text-sm mb-3">IdeaRalph + Spawner skills (recommended):</p>
 
-          <p class="text-chalkboard/50 text-xs mb-2">Or IdeaRalph only:</p>
-
-          <div class="bg-chalkboard/80 rounded-lg p-2 mb-2">
-            <code class="block text-xs text-playground-green/80 font-mono">npx github:vibeforge1111/vibeship-idearalph install</code>
-          </div>
-
-          <button
-            onclick={() => {
-              navigator.clipboard.writeText('npx github:vibeforge1111/vibeship-idearalph install');
-              copied = true;
-              setTimeout(() => copied = false, 2000);
-            }}
-            class="btn-crayon w-full text-xs mb-3 bg-gray-100 {copied ? 'bg-playground-green' : ''}"
-          >
-            {copied ? '✓ Copied!' : 'Copy IdeaRalph Only'}
-          </button>
-
-          <div class="bg-ralph-yellow border-2 border-chalkboard rounded-lg p-4 mb-4">
-            <p class="text-base text-chalkboard font-bold mb-2">After running, restart Claude Code:</p>
-            <div class="flex items-center justify-center gap-3 text-base text-chalkboard">
-              <code class="bg-white px-3 py-1.5 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:rotate-1 cursor-pointer">/exit</code>
-              <span class="bg-white px-2 py-1 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:rotate-2 cursor-pointer">→</span>
-              <code class="bg-white px-3 py-1.5 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:-rotate-1 cursor-pointer">claude</code>
+            <div class="bg-chalkboard rounded-lg p-3 mb-2">
+              <code class="block text-sm text-playground-green font-mono">npx github:vibeforge1111/vibeship-idearalph install --with-spawner</code>
             </div>
-          </div>
+
+            <button
+              onclick={() => {
+                navigator.clipboard.writeText('npx github:vibeforge1111/vibeship-idearalph install --with-spawner');
+                copied = true;
+                setTimeout(() => copied = false, 2000);
+              }}
+              class="btn-crayon w-full text-sm mb-4 {copied ? 'bg-playground-green' : ''}"
+            >
+              {copied ? '✓ Copied!' : 'Copy Command'}
+            </button>
+
+            <p class="text-chalkboard/50 text-xs mb-2">Or IdeaRalph only:</p>
+
+            <div class="bg-chalkboard/80 rounded-lg p-2 mb-2">
+              <code class="block text-xs text-playground-green/80 font-mono">npx github:vibeforge1111/vibeship-idearalph install</code>
+            </div>
+
+            <button
+              onclick={() => {
+                navigator.clipboard.writeText('npx github:vibeforge1111/vibeship-idearalph install');
+                copied = true;
+                setTimeout(() => copied = false, 2000);
+              }}
+              class="btn-crayon w-full text-xs mb-3 bg-gray-100 {copied ? 'bg-playground-green' : ''}"
+            >
+              {copied ? '✓ Copied!' : 'Copy IdeaRalph Only'}
+            </button>
+          {:else}
+            <p class="text-chalkboard/70 text-sm mb-2">Step 1: Clone and build</p>
+            <div class="bg-chalkboard rounded-lg p-2 mb-3">
+              <code class="text-xs text-playground-green font-mono block">git clone https://github.com/vibeforge1111/vibeship-idearalph.git</code>
+              <code class="text-xs text-playground-green font-mono block mt-1">cd vibeship-idearalph/mcp-server && npm install && npm run build</code>
+            </div>
+
+            <p class="text-chalkboard/70 text-sm mb-2">Step 2: Add to Claude Desktop config</p>
+            <p class="text-xs text-chalkboard/50 mb-2">
+              Mac: <code class="bg-chalkboard/10 px-1 rounded text-xs">~/Library/Application Support/Claude/claude_desktop_config.json</code><br/>
+              Win: <code class="bg-chalkboard/10 px-1 rounded text-xs">%APPDATA%\Claude\claude_desktop_config.json</code>
+            </p>
+            <div class="bg-chalkboard rounded-lg p-2 mb-3">
+              <pre class="text-xs text-playground-green font-mono overflow-x-auto">{`{
+  "mcpServers": {
+    "idearalph": {
+      "command": "node",
+      "args": ["/path/to/mcp-server/dist/index.js"]
+    }
+  }
+}`}</pre>
+            </div>
+          {/if}
 
           <p class="text-xs text-chalkboard/60 mb-4">
             MCP = superpowers for Claude. Runs locally, no API key needed.
@@ -510,7 +544,18 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
           </button>
           <div class="flex items-center gap-2 mb-4">
             <span class="bg-playground-green text-white font-bold rounded-full w-8 h-8 flex items-center justify-center">2</span>
-            <h2 class="font-chalk text-xl text-chalkboard">The Ralph Loop</h2>
+            <h2 class="font-chalk text-xl text-chalkboard">Restart Claude</h2>
+          </div>
+
+          <!-- Restart Instructions -->
+          <div class="bg-ralph-yellow border-2 border-chalkboard rounded-lg p-4 mb-4">
+            <p class="text-sm text-chalkboard font-bold mb-2">After installing, restart Claude:</p>
+            <div class="flex items-center justify-center gap-3 text-base text-chalkboard">
+              <code class="bg-white px-3 py-1.5 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:rotate-1 cursor-pointer">/exit</code>
+              <span class="bg-white px-2 py-1 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:rotate-2 cursor-pointer">→</span>
+              <code class="bg-white px-3 py-1.5 rounded-lg font-bold border-3 border-chalkboard shadow-crayon transition-all duration-150 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:-rotate-1 cursor-pointer">claude</code>
+            </div>
+            <p class="text-xs text-chalkboard/60 text-center mt-2">(Or restart Claude Desktop)</p>
           </div>
 
           <!-- Iteration System -->
@@ -874,6 +919,11 @@ Don't stop until 9.9+ achieved. This may take many iterations.`;
           <p class="ralph-voice text-chalkboard text-base whitespace-nowrap">"Brainstorm ideas..."</p>
         </div>
       </div>
+
+      <!-- MCP Note -->
+      <p class="text-center text-chalkboard/50 text-sm mt-8">
+        Get the MCP install command from the <a href="#unleash-ralph" class="underline hover:text-chalkboard transition-colors">Unleash Ralph</a> button above
+      </p>
     </div>
   </section>
 
