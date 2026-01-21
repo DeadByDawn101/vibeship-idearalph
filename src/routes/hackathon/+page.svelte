@@ -23,24 +23,32 @@
 
   const faqs = [
     {
+      q: "What is vibe coding?",
+      a: "Building apps with AI assistance (Claude Code, Cursor, Copilot). You don't need to be a senior dev - if you can ship with AI, you're a vibe coder."
+    },
+    {
+      q: "How does the launchpad work?",
+      a: "Build your app → Create hype on X → Get users → List on vibe/vibe to raise. Two paths: Community Launch (open to all) or Seedify Curated (higher raises for top projects)."
+    },
+    {
+      q: "Is there a deadline?",
+      a: "No! This is a continuous hackathon. Build at your pace. Raise when you're ready. No waiting for results."
+    },
+    {
+      q: "Can existing projects join?",
+      a: "Yes! If you already have a vibe-coded app with traction, you can list on vibe/vibe when it launches."
+    },
+    {
+      q: "How do I get $RALPH tokens?",
+      a: "Multiple ways: participate in the hackathon, launch on vibe/vibe, get strong usage metrics, or get selected for Seedify curation."
+    },
+    {
+      q: "What's the difference between Community and Curated?",
+      a: "Community Launch is open to everyone who ships. Seedify Curated is for projects with exceptional traction - they get higher raise caps and bonus token allocations."
+    },
+    {
       q: "Do I need to pay anything?",
-      a: "No. The MCP is free. Claude Code has a free tier. Everything runs locally."
-    },
-    {
-      q: "Can I work in a team?",
-      a: "Yes. Teams are allowed. One submission per team."
-    },
-    {
-      q: "What tech stack should I use?",
-      a: "SvelteKit + Supabase is recommended but not required. Build with whatever you vibe with."
-    },
-    {
-      q: "How do you verify I used Ralph?",
-      a: "Your PRD and artifacts will have Ralph's signature format. We review top submissions manually."
-    },
-    {
-      q: "When do I get my tokens?",
-      a: "After the hackathon ends and winners are announced. Distribution details TBA."
+      a: "No. The MCP is free. Claude Code has a free tier. Everything runs locally. The launchpad will have standard Seedify terms."
     }
   ];
 
@@ -75,8 +83,8 @@
 </script>
 
 <svelte:head>
-  <title>The Ralph Loop Hackathon | IdeaRalph x Seedify</title>
-  <meta name="description" content="Build stupid-smart startups. Win $RALPH tokens. A vibe-coding hackathon powered by IdeaRalph MCP." />
+  <title>Vibecode: Build → Hype → Raise | IdeaRalph x Seedify</title>
+  <meta name="description" content="The first launchpad for vibe-coded apps. Build with AI, create hype on X, raise on vibe/vibe. If you can ship, you're eligible." />
 </svelte:head>
 
 <main class="bg-playground-sunset overflow-hidden">
@@ -115,15 +123,18 @@
 
       <!-- Title -->
       <h1 class="font-chalk text-5xl md:text-7xl lg:text-8xl text-white mb-4 leading-tight drop-shadow-lg">
-        THE RALPH LOOP
+        VIBECODE
       </h1>
-      <p class="font-chalk text-3xl md:text-4xl text-ralph-yellow mb-6 drop-shadow-md">
-        Hackathon
+      <p class="font-chalk text-2xl md:text-3xl text-ralph-yellow mb-6 drop-shadow-md">
+        Build → Hype → Raise
       </p>
 
       <!-- Tagline -->
-      <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl mx-auto drop-shadow">
-        Build stupid-smart startups. Win <span class="font-bold text-ralph-yellow">$RALPH</span> tokens.
+      <p class="text-xl md:text-2xl text-white/90 mb-4 max-w-2xl mx-auto drop-shadow">
+        The first launchpad for <span class="font-bold text-ralph-yellow">vibe-coded</span> apps.
+      </p>
+      <p class="text-lg text-white/70 mb-10 max-w-xl mx-auto drop-shadow">
+        If you can ship, you're eligible. No gatekeeping.
       </p>
 
       <!-- Countdown -->
@@ -167,61 +178,105 @@
 
       <!-- CTA -->
       <a href="#how-to-enter" class="btn-crayon text-xl px-10 py-5 inline-flex items-center gap-3 animate-pulse-subtle">
-        <span>Start Building</span>
-        <span class="text-2xl">→</span>
+        <span>Start Building Now</span>
+        <span class="text-2xl">🛠️</span>
       </a>
     </div>
   </section>
 
-  <!-- What Is This Section -->
+  <!-- The Flow Section -->
   <section class="bg-paper py-16 md:py-24 px-4">
     <div class="max-w-4xl mx-auto">
-      <!-- Ralph Quote -->
+      <!-- Quote -->
       <div class="flex justify-center mb-10">
         <div class="thought-bubble bg-white px-8 py-4">
           <p class="ralph-voice text-xl md:text-2xl text-chalkboard text-center">
-            "I'm helping you build startups!"
+            "90% of hackathon projects die after demo day. Not anymore."
           </p>
         </div>
       </div>
 
-      <!-- 4 Step Flow -->
+      <!-- 4 Step Flow: Build → Hype → Usage → Raise -->
       <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-10">
         <div class="flex flex-col items-center text-center">
           <div class="w-16 h-16 bg-ralph-yellow rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
-            <span class="text-2xl">⚡</span>
+            <span class="text-2xl">🛠️</span>
           </div>
-          <span class="font-chalk text-lg">Install MCP</span>
+          <span class="font-chalk text-lg">Build</span>
+          <span class="text-xs text-chalkboard/60">Vibe code your app</span>
         </div>
         <span class="text-2xl text-chalkboard/30 hidden md:block">→</span>
         <span class="text-2xl text-chalkboard/30 md:hidden rotate-90">→</span>
         <div class="flex flex-col items-center text-center">
           <div class="w-16 h-16 bg-playground-green rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
-            <span class="text-2xl">🧒</span>
+            <span class="text-2xl">📣</span>
           </div>
-          <span class="font-chalk text-lg">Build w/ Ralph</span>
+          <span class="font-chalk text-lg">Hype</span>
+          <span class="text-xs text-chalkboard/60">Create buzz on X</span>
         </div>
         <span class="text-2xl text-chalkboard/30 hidden md:block">→</span>
         <span class="text-2xl text-chalkboard/30 md:hidden rotate-90">→</span>
         <div class="flex flex-col items-center text-center">
           <div class="w-16 h-16 bg-sky-blue rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
-            <span class="text-2xl">🚀</span>
+            <span class="text-2xl">📊</span>
           </div>
-          <span class="font-chalk text-lg">Ship Product</span>
+          <span class="font-chalk text-lg">Usage</span>
+          <span class="text-xs text-chalkboard/60">Get people using it</span>
         </div>
         <span class="text-2xl text-chalkboard/30 hidden md:block">→</span>
         <span class="text-2xl text-chalkboard/30 md:hidden rotate-90">→</span>
         <div class="flex flex-col items-center text-center">
-          <div class="w-16 h-16 bg-playground-orange rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
-            <span class="text-2xl">🏆</span>
+          <div class="w-16 h-16 bg-purple-400 rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-2">
+            <span class="text-2xl">💰</span>
           </div>
-          <span class="font-chalk text-lg">Win Tokens</span>
+          <span class="font-chalk text-lg">Raise</span>
+          <span class="text-xs text-chalkboard/60">Launch on vibe/vibe</span>
         </div>
       </div>
 
       <!-- Description -->
-      <p class="text-center text-chalkboard/70 text-lg max-w-2xl mx-auto">
-        Use IdeaRalph to go from stupid idea to shipped product. The best projects win <span class="font-bold">$RALPH</span> tokens.
+      <p class="text-center text-chalkboard/70 text-lg max-w-2xl mx-auto mb-6">
+        Build with AI (Claude Code, Cursor, Copilot). Create traction on X. Raise on <span class="font-bold">vibe/vibe</span> launchpad.
+      </p>
+      <p class="text-center text-chalkboard font-bold text-xl">
+        No deadline. No limits. If you ship, you can raise.
+      </p>
+    </div>
+  </section>
+
+  <!-- vibe/vibe Launchpad Teaser -->
+  <section class="bg-gradient-to-b from-purple-500 to-purple-700 py-16 md:py-20 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+        <span class="text-white font-bold text-sm">🚀 COMING IN DAYS</span>
+      </div>
+
+      <h2 class="font-chalk text-4xl md:text-5xl text-white mb-4">
+        vibe/vibe Launchpad
+      </h2>
+      <p class="text-xl text-white/80 mb-8 max-w-xl mx-auto">
+        The first launchpad built for vibe coders. Powered by Seedify.
+      </p>
+
+      <!-- Two Paths -->
+      <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-8">
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div class="text-3xl mb-3">🌐</div>
+          <h3 class="font-chalk text-xl text-white mb-2">Community Launch</h3>
+          <p class="text-white/70 text-sm mb-3">Ship an app + have X traction</p>
+          <div class="text-white/50 text-xs">Open to everyone who builds</div>
+        </div>
+
+        <div class="bg-ralph-yellow/20 backdrop-blur-sm rounded-xl p-6 border border-ralph-yellow/40">
+          <div class="text-3xl mb-3">👑</div>
+          <h3 class="font-chalk text-xl text-ralph-yellow mb-2">Seedify Curated</h3>
+          <p class="text-white/70 text-sm mb-3">Strong traction → higher raise</p>
+          <div class="text-ralph-yellow/70 text-xs">+ Bonus $RALPH allocation</div>
+        </div>
+      </div>
+
+      <p class="text-white/60 text-sm max-w-lg mx-auto">
+        Start building NOW. The launchpad drops soon. A significant portion of <span class="text-ralph-yellow font-bold">$RALPH</span> tokens goes to projects that launch on vibe/vibe.
       </p>
     </div>
   </section>
@@ -229,9 +284,10 @@
   <!-- Prize Categories Section -->
   <section class="bg-chalkboard py-16 md:py-24 px-4">
     <div class="max-w-5xl mx-auto">
-      <h2 class="font-chalk text-3xl md:text-4xl text-ralph-yellow text-center mb-12">
-        🏆 5 Ways to Win
+      <h2 class="font-chalk text-3xl md:text-4xl text-ralph-yellow text-center mb-4">
+        🏆 Earn $RALPH Tokens
       </h2>
+      <p class="text-center text-white/60 mb-12">Multiple ways to earn while you build</p>
 
       <!-- Category Grid -->
       <div class="grid md:grid-cols-2 gap-6 mb-8">
@@ -408,18 +464,19 @@
   <!-- How to Enter Section -->
   <section id="how-to-enter" class="bg-gradient-to-b from-playground-green/20 to-white py-16 md:py-24 px-4">
     <div class="max-w-4xl mx-auto">
-      <h2 class="font-chalk text-3xl md:text-4xl text-chalkboard text-center mb-12">
-        🚀 How to Enter
+      <h2 class="font-chalk text-3xl md:text-4xl text-chalkboard text-center mb-4">
+        🚀 Start Building Now
       </h2>
+      <p class="text-center text-chalkboard/60 mb-12">Get ready for the vibe/vibe launchpad</p>
 
-      <!-- 3 Steps -->
-      <div class="flex flex-col md:flex-row items-center justify-center gap-8 mb-12">
+      <!-- 4 Steps -->
+      <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-12">
         <div class="flex flex-col items-center text-center">
           <div class="w-14 h-14 bg-ralph-yellow rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-3">
             <span class="font-chalk text-xl">1</span>
           </div>
           <span class="font-chalk text-lg text-chalkboard">Install MCP</span>
-          <span class="text-sm text-chalkboard/60">One command</span>
+          <span class="text-sm text-chalkboard/60">Get Ralph powers</span>
         </div>
         <span class="text-3xl text-chalkboard/30 hidden md:block">→</span>
         <span class="text-3xl text-chalkboard/30 md:hidden rotate-90">→</span>
@@ -427,8 +484,8 @@
           <div class="w-14 h-14 bg-playground-green rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-3">
             <span class="font-chalk text-xl text-white">2</span>
           </div>
-          <span class="font-chalk text-lg text-chalkboard">Build w/ Ralph</span>
-          <span class="text-sm text-chalkboard/60">Use the loop</span>
+          <span class="font-chalk text-lg text-chalkboard">Build Your App</span>
+          <span class="text-sm text-chalkboard/60">Vibe code it</span>
         </div>
         <span class="text-3xl text-chalkboard/30 hidden md:block">→</span>
         <span class="text-3xl text-chalkboard/30 md:hidden rotate-90">→</span>
@@ -436,8 +493,17 @@
           <div class="w-14 h-14 bg-sky-blue rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-3">
             <span class="font-chalk text-xl text-white">3</span>
           </div>
-          <span class="font-chalk text-lg text-chalkboard">Submit Project</span>
-          <span class="text-sm text-chalkboard/60">URL + PRD</span>
+          <span class="font-chalk text-lg text-chalkboard">Hype on X</span>
+          <span class="text-sm text-chalkboard/60">Build traction</span>
+        </div>
+        <span class="text-3xl text-chalkboard/30 hidden md:block">→</span>
+        <span class="text-3xl text-chalkboard/30 md:hidden rotate-90">→</span>
+        <div class="flex flex-col items-center text-center">
+          <div class="w-14 h-14 bg-purple-400 rounded-full flex items-center justify-center border-3 border-chalkboard shadow-crayon mb-3">
+            <span class="font-chalk text-xl text-white">4</span>
+          </div>
+          <span class="font-chalk text-lg text-chalkboard">Raise</span>
+          <span class="text-sm text-chalkboard/60">On vibe/vibe</span>
         </div>
       </div>
 
@@ -496,16 +562,23 @@
   <section class="bg-chalkboard py-16 md:py-24 px-4">
     <div class="max-w-3xl mx-auto text-center">
       <p class="text-white/80 text-lg md:text-xl mb-6 italic">
-        "The future of startups is one person with Claude Code, an idea that sounds stupid, and the audacity to ship."
+        "The future of startups is one person with Claude Code, an idea that sounds stupid, and the audacity to ship and raise."
       </p>
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
         <a href="#how-to-enter" class="btn-crayon text-lg px-8 py-3">
-          🚀 Enter the Hackathon
+          🛠️ Start Building Now
         </a>
         <a href="/docs/MANIFESTO.md" class="text-white/70 hover:text-white underline">
           Read the Manifesto →
         </a>
+      </div>
+
+      <!-- Launchpad coming soon reminder -->
+      <div class="bg-purple-500/20 border border-purple-400/30 rounded-xl p-4 mb-8 max-w-md mx-auto">
+        <p class="text-purple-300 text-sm">
+          <span class="font-bold">vibe/vibe launchpad</span> drops in days. Build now, raise soon.
+        </p>
       </div>
 
       <!-- Vibeship Branding -->
